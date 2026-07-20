@@ -120,6 +120,10 @@ jobs:
     permissions:
       contents: read
       deployments: read
+      # statuses: read powers the refusal diagnostic (why a deployment was never
+      # created). Without it that detail is simply omitted - v0.5.5 made the check
+      # genuinely soft, after v0.5.4 let a missing scope fail a healthy repo.
+      statuses: read
     # DELIBERATELY NOT `needs: qa`. Vercel deploys independently of this workflow —
     # staffing's QA gate has been RED since 2026-07-19 and Vercel kept deploying — so
     # gating verification behind a green QA would skip it on exactly the deploys most
@@ -152,7 +156,7 @@ jobs:
         run: |
           set -euo pipefail
           curl -sSfL -o /tmp/deploy-verify.mjs \
-            https://raw.githubusercontent.com/netyvee/web-framework/v0.5.4/scripts/deploy-verify.mjs
+            https://raw.githubusercontent.com/netyvee/web-framework/v0.5.5/scripts/deploy-verify.mjs
           node /tmp/deploy-verify.mjs \
             --repo "${{ github.repository }}" \
             --sha "${{ github.sha }}" \
