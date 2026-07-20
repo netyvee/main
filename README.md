@@ -99,46 +99,51 @@ founder-owned content, not an engineering decision. Real-page migration is gated
   lose orphan ranking pages.
 - **No corporate OG image, no logo asset.** Brand decisions.
 
-## CI note — push-triggered runs were binding to a ghost workflow
+## CI note — Actions cannot start runs here (GitHub incident, 2026-07-20)
 
-The first four pushes to this repository all produced `startup_failure` with no jobs and
-no check-runs. Diagnosis, recorded so the next session does not repeat it:
+**Every** run in this repository has ended in `startup_failure` — push and
+`workflow_dispatch` alike. Diagnosed to conclusion so the next session does not repeat it.
 
-| Check | Result |
-|---|---|
-| YAML valid? | **Yes** — parses identically to `netyvee/care`'s `qa.yml` (same top-level keys, same job, 6 steps) |
-| BOM / CRLF / tabs? | None |
-| Actions enabled? | **Yes** — `enabled: true`, `allowed_actions: all` |
-| Workflow registered? | **Yes** — `316394152`, `QA Gate`, `state=active` |
-| Runs attributed to? | **`316395111` — a workflow ID that does not exist in `/actions/workflows`** |
+### Ruled out, in order
 
-Every push-triggered run was bound to a **workflow ID that was not the registered one**.
+| Hypothesis | Test | Verdict |
+|---|---|---|
+| `qa.yml` is malformed | Parsed with `js-yaml` against `netyvee/care`'s working `qa.yml` — same top-level keys, same job, 6 steps. No BOM, no CRLF, no tabs | **Not the cause** |
+| Actions disabled / restricted | `enabled: true`, `allowed_actions: all`, `default_workflow_permissions: read` — **byte-identical** to `netyvee/web-framework`, which ran fine the same night | **Not the cause** |
+| Ghost workflow registration | Runs were attributed to workflow `316395111`, which is absent from `/actions/workflows` (registered id is `316394152`). Dispatching the **correct** id still produced `startup_failure` | **Symptom, not cause** |
+| Repository not ingested | `gh api repos/netyvee/main --jq .size` returned **0** despite pushed commits. It later became **27**, and the run `path` began resolving to `qa.yml` correctly — **and runs still failed** | **Real, but not the whole cause** |
+| Something specific to `qa.yml` | Added `smoke.yml`: ten lines, no `concurrency`, no actions, no expressions. **It also failed at startup** | **Conclusive — the file is exonerated** |
+| Broken Actions provisioning | Toggled Actions off → on via the API, re-dispatched | Did not resolve it |
 
-**Then the ghost-workflow theory was itself disproved.** A `workflow_dispatch` against the
-*correct* workflow ID (`316394152`) queued a run — and that run **also ended in
-`startup_failure`**. So the mismatched ID is a symptom, not the cause.
-
-**The actual cause, and it is server-side:**
+### The actual cause
 
 ```
-gh api repos/netyvee/main --jq .size   →  0
+githubstatus.com/api/v2/summary.json
+  status:    Minor Service Outage
+  Actions:   partial_outage
+  incident:  "Incident with GitHub Actions" — investigating
 ```
 
-GitHub reports this repository as **size 0** despite six pushed commits. Its own contents
-API lists every file and `branches/main` resolves to the correct head, so **the code is
-genuinely there** — but GitHub's repository metadata has not ingested it. From the
-runner's point of view there is nothing to check out, which is exactly why no run can
-start, by push or by dispatch. GitHub's status page reported a *Minor Service Outage*
-throughout the window this repository was created.
+An **active GitHub Actions incident**, still open at the time of writing. `partial_outage`
+explains why `netyvee/app` and `netyvee/web-framework` ran normally the same night while
+this repository could not start a single run — some capacity was serving, some was not.
 
-**Nothing here needs fixing in this repo.** The remedy is to re-dispatch once the incident
-clears and `size` is non-zero. If it persists after that, force re-registration by
-renaming the workflow file.
+**There is nothing to fix in this repository.** Re-dispatch once the incident closes:
 
-> Recorded this way deliberately: the first version of this note claimed dispatch "works
-> and proves the file is fine", written while the dispatched run was still *queued*. It
-> then failed. Treating a queued run as evidence is the same error this repository's own
-> pilot exists to eliminate — a signal read before it means anything.
+```
+gh api -X POST repos/netyvee/main/actions/workflows/316413471/dispatches -f ref=main   # smoke
+gh api -X POST repos/netyvee/main/actions/workflows/316394152/dispatches -f ref=main   # QA Gate
+```
+
+`smoke.yml` is kept deliberately: it is the cheapest possible "can Actions run here at all"
+probe, and it is what turned this from a theory into a bisect.
+
+> **Two of my own earlier explanations in this file were wrong and are corrected above.**
+> The first claimed `workflow_dispatch` "works and proves the file is fine" — written while
+> the dispatched run was still *queued*; it then failed. The second blamed repository
+> ingestion alone — real, but runs kept failing after it recovered. Both are left visible
+> rather than quietly replaced, because reading a signal before it means anything is the
+> exact failure this repository's pilot page exists to eliminate.
 
 ## Local development
 
