@@ -6,10 +6,9 @@
     "seo": {
         "title": "Render pilot \u2014 Vigil Services Ltd",
         "noindex": true,
-        "canonical": "/pilot-render-check",
+        "canonical": "https://vigilservices.co.uk/pilot-render-check/",
         "description": "Internal render verification page for the corporate site publishing pipeline. Not indexed and not linked from the site.",
-        "schema_type": null,
-        "focus_keyword": "render pilot"
+        "schema_type": null
     },
     "brand": {
         "bg": "#0a1628",
@@ -35,14 +34,6 @@
         "enquiry_url": ""
     },
     "sections": [
-        {
-            "id": "pilot-hero",
-            "type": "hero",
-            "fields": {
-                "sub": "Verification page for the corporate publishing pipeline.",
-                "heading": "Render pilot"
-            }
-        },
         {
             "id": "pilot-intro",
             "type": "prose",
