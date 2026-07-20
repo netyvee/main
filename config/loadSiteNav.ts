@@ -6,18 +6,37 @@
 // JSON `nap` block, so a cross-division value remains impossible.
 import fs from 'fs';
 import path from 'path';
-import type { SiteNav } from '@vigil/web-framework';
+import type { SiteNav, NavLink } from '@vigil/web-framework';
+import { isNavLinkRel } from '@vigil/web-framework';
 import { siteNav as base } from './site';
 
 type ExportedSettings = {
   logo?: { src?: string; footerSrc?: string; alt?: string };
   social?: Record<string, string>;
-  nav?: { label?: string; href?: string }[];
+  nav?: { label?: string; href?: string; rel?: string }[];
   footer?: {
-    columns?: { heading?: string; links?: { label?: string; href?: string }[] }[];
-    legal?: { label?: string; href?: string }[];
+    columns?: { heading?: string; links?: { label?: string; href?: string; rel?: string }[] }[];
+    legal?: { label?: string; href?: string; rel?: string }[];
   };
 };
+
+// SM-F2 — ONE normalisation point for a link, so `rel` cannot be preserved in some
+// placements and dropped in others (it was previously dropped in all four).
+//
+// `rel` is carried through a CLOSED ALLOW-LIST (isNavLinkRel), never copied across.
+// This file reads JSON the CRM exported: at that boundary the value is `unknown` no
+// matter what the TypeScript type claims, so an unrecognised or hostile `rel` must be
+// DROPPED rather than trusted. Dropping is the safe direction — an unknown relationship
+// renders as an ordinary link; carrying it would let a site assert a governed
+// relationship the framework never defined.
+function toNavLink(raw: { label?: string; href?: string; rel?: string } | undefined): NavLink | null {
+  const label = (raw?.label ?? '').trim();
+  const href = (raw?.href ?? '').trim();
+  if (!label || !href) return null;
+  const link: NavLink = { label, href };
+  if (isNavLinkRel(raw?.rel)) link.rel = raw.rel;
+  return link;
+}
 
 function readSettings(): ExportedSettings | null {
   try {
@@ -43,24 +62,18 @@ export function loadSiteNav(): SiteNav {
     };
   }
 
-  const nav = (s.nav ?? [])
-    .map((i) => ({ label: (i.label ?? '').trim(), href: (i.href ?? '').trim() }))
-    .filter((l) => l.label && l.href);
+  const nav = (s.nav ?? []).map(toNavLink).filter((l): l is NavLink => l !== null);
   if (nav.length) merged.primary = nav;
 
   const columns = (s.footer?.columns ?? [])
     .map((c) => ({
       heading: (c.heading ?? '').trim(),
-      links: (c.links ?? [])
-        .map((l) => ({ label: (l.label ?? '').trim(), href: (l.href ?? '').trim() }))
-        .filter((l) => l.label && l.href),
+      links: (c.links ?? []).map(toNavLink).filter((l): l is NavLink => l !== null),
     }))
     .filter((c) => c.heading);
   if (columns.length) merged.footer = columns;
 
-  const legal = (s.footer?.legal ?? [])
-    .map((l) => ({ label: (l.label ?? '').trim(), href: (l.href ?? '').trim() }))
-    .filter((l) => l.label && l.href);
+  const legal = (s.footer?.legal ?? []).map(toNavLink).filter((l): l is NavLink => l !== null);
   if (legal.length) merged.legalLinks = legal;
 
   const social = Object.entries(s.social ?? {})

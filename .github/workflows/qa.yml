@@ -97,6 +97,18 @@ jobs:
         run: npm run test:manifest
       - name: Corporate content gate (content/pages/*.json)
         run: node scripts/content-check.mjs
+      - name: Typed link metadata round-trip (SM-F2)
+        # Runs BEFORE the ordinary build, and performs a build of its own against a
+        # temporary settings file. It is not a unit test on purpose: the defect it
+        # guards spanned three repositories and was invisible at every intermediate
+        # layer — the framework type, this repo's loader, and the Shell each looked
+        # fine alone while the rendered page carried nothing. So it asserts on real
+        # build output: actual loader, actual installed framework, actual renderer.
+        #
+        # It also proves the NEGATIVE direction — an unrecognised `rel` must be
+        # dropped, never carried — which is what stops the allow-list decaying into
+        # a passthrough. The temporary settings file is always restored.
+        run: npm run test:navrel
       - name: Build
         run: npm run build
       - name: Assert the pilot page actually rendered
@@ -173,7 +185,7 @@ jobs:
         run: |
           set -euo pipefail
           curl -sSfL -o /tmp/deploy-verify.mjs \
-            https://raw.githubusercontent.com/netyvee/web-framework/v0.5.5/scripts/deploy-verify.mjs
+            https://raw.githubusercontent.com/netyvee/web-framework/v0.6.0/scripts/deploy-verify.mjs
           node /tmp/deploy-verify.mjs \
             --repo "${{ github.repository }}" \
             --sha "${{ github.sha }}" \
