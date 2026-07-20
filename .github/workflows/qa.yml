@@ -7,11 +7,26 @@ name: QA Gate
 # the site builds on its pinned framework and that no division phone can appear in
 # the corporate output.
 #
-# CHECK ONLY — no deploy job. Vercel deploys on push independently, once a project is
-# linked (an open founder gate, MAIN-G2). Note that this decoupling is exactly the
-# defect PUB-01 exists to close: staffing's QA gate went red on 2026-07-19 and Vercel
-# deployed anyway. Until PUB-01 lands, a green tick here does NOT mean the deployed
-# site is good — it means the build and the content gate passed.
+# This file used to say: "a green tick here does NOT mean the deployed site is good."
+# That was true, and it was not enough. On 2026-07-20 all six Vercel deployments of
+# this repository failed while the migration was reported as a successful deploy with
+# verified rendering. A caveat in a comment does not stop a false success; only a
+# failing check does. So the deploy is now verified by this workflow — see the
+# `deploy` job below, which fails when Vercel fails.
+#
+# Two things had to change for that green tick to mean anything:
+#
+#  1. INSTALL EXACTLY AS THE DEPLOY PLATFORM DOES. This job ran `npm install`, which
+#     is permitted to repair a lockfile. Vercel runs `npm ci`, which is not. The
+#     lockfile recorded one platform binary (`@next/swc-win32-x64-msvc`) instead of
+#     nine, so Vercel had no Linux SWC binary and `next build` died — while this
+#     workflow would have gone green, because npm quietly fixed the tree for it.
+#     `npm ci` here, always. Plus an explicit lockfile-platform check, so the cause
+#     is named rather than left as a confusing build error.
+#
+#  2. VERIFY THE DEPLOY, DON'T ASSUME IT. Nothing polled the deployment. The audit
+#     even asserted "No Vercel project. Nothing is deployed." — contradicted by one
+#     unrun API call. Absence of evidence was read as evidence of absence.
 
 on:
   push:
@@ -44,8 +59,19 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-      - name: Install (framework pin resolves from the public git tag)
-        run: npm install
+      - name: Install (npm ci — exactly what Vercel runs, never npm install)
+        # `npm install` may rewrite the lockfile to suit this runner. That makes CI
+        # test a dependency tree the deploy never receives, which is how a green CI
+        # run coexisted with six failed deployments.
+        run: npm ci
+      - name: Lockfile must install on the deploy platform (linux-x64)
+        # Runs after install because the checker ships in the framework, and before
+        # build because that is where the damage shows. Note npm ci does NOT fail on
+        # a missing optional platform binary — it installs happily and `next build`
+        # then dies with an opaque SWC error. This names the real cause instead, and
+        # it is the check that would have caught the MAIN-01 deploy failure.
+        # `npm ci` never rewrites package-lock.json, so this reads what was committed.
+        run: node node_modules/@vigil/web-framework/scripts/lockfile-platform-check.mjs
       - name: Corporate content gate (content/pages/*.json)
         run: node scripts/content-check.mjs
       - name: Build
@@ -73,3 +99,46 @@ jobs:
             exit 1
           fi
           echo "✓ Pilot page rendered with the approved content and corporate identity."
+        # NOTE what this step does and does not prove. It proves the content renders in
+        # a build produced HERE. It says nothing about the deployed site — which is why
+        # it passed while every Vercel deployment failed. The `deploy` job below is the
+        # part that was missing.
+
+  deploy:
+    name: deploy actually succeeded
+    needs: qa
+    # Only on push: a pull_request build has no production deployment to verify, and
+    # asserting one exists would fail every PR for the wrong reason.
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Poll the Vercel deployment to a terminal state
+        # This job exists because "the deploy succeeded" was reported to the founder
+        # while all six deployments of this repository had failed. The evidence used
+        # was a push, an accepted commit, and a build that passed on a laptop.
+        #
+        # deploy-verify.mjs treats absence of a deployment as FAILURE, refuses to
+        # accept a non-terminal state as success, and fails on timeout rather than
+        # assuming. It needs only GITHUB_TOKEN — Vercel's outcome is reported to the
+        # GitHub deployments API, so no Vercel credential is involved and this is NOT
+        # blocked on the MAIN-G2 founder gate, contrary to what the audit recorded.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl -sSfL -o /tmp/deploy-verify.mjs \
+            https://raw.githubusercontent.com/netyvee/web-framework/v0.5.0/scripts/deploy-verify.mjs
+          node /tmp/deploy-verify.mjs \
+            --repo "${{ github.repository }}" \
+            --sha "${{ github.sha }}" \
+            --timeout 900
+        # RENDER-AGAINST-THE-DEPLOYED-SITE is deliberately not asserted here yet. The
+        # preview URLs are behind Vercel SSO (they answer 200 with a login page, which
+        # a naive grep would pass), and there is no public production URL for this site
+        # until cutover. deploy-verify.mjs rejects an SSO page rather than grepping it,
+        # so this is recorded as a known limit, not quietly skipped. Add --url/--marker
+        # at cutover, when a public URL exists.

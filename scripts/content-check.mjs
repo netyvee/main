@@ -84,10 +84,18 @@ for (const file of files) {
 
   // SEO essentials.
   const seo = page.seo ?? {};
+  // Canonical is stored as a ROOT-RELATIVE PATH, not an absolute URL — that is the
+  // CRM's rule (PageHealthService: leading slash, no trailing slash), and the
+  // framework resolves it against `metadataBase` at render time. An absolute URL here
+  // would be a sign that something bypassed the CRM export.
   if (!seo.canonical) {
     errors.push(`${file}: seo.canonical is missing`);
-  } else if (!seo.canonical.startsWith(ORIGIN)) {
-    errors.push(`${file}: seo.canonical "${seo.canonical}" is not on ${ORIGIN}`);
+  } else if (seo.canonical.startsWith('http')) {
+    errors.push(`${file}: seo.canonical "${seo.canonical}" is an absolute URL; expected a root-relative path (the CRM stores paths and the framework resolves them against ${ORIGIN})`);
+  } else if (!seo.canonical.startsWith('/')) {
+    errors.push(`${file}: seo.canonical "${seo.canonical}" must start with "/"`);
+  } else if (seo.canonical !== '/' && seo.canonical.endsWith('/')) {
+    errors.push(`${file}: seo.canonical "${seo.canonical}" must not end with a trailing slash (CRM policy)`);
   }
   if (!seo.title) errors.push(`${file}: seo.title is missing`);
   if (seo.title) {
