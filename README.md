@@ -5,9 +5,11 @@ The parent-company front door for **vigilservices.co.uk**, built on the shared
 (`netyvee/app`) and published into `content/pages/*.json`; this repo holds the engine
 wiring and configuration, not copy.
 
-**Status: MAIN-01 Phase A — pilot scaffold. NOT DEPLOYED (every Vercel deployment has
-failed — see "Deploy status" below). Not live. No DNS change. The existing
-WordPress site at vigilservices.co.uk remains authoritative and untouched.**
+**Status: MAIN-01 Phase A — pilot scaffold. DEPLOY VERIFIED 2026-07-20 (deployment
+`5518210416`, terminal state `success`) — the first successful deployment this repository
+has ever had. RENDER still unverified: the deployment URL is behind Vercel SSO. Not live.
+No DNS change. The existing WordPress site at vigilservices.co.uk remains authoritative
+and untouched.**
 
 ## What this repo is, and why it exists now
 
@@ -45,8 +47,10 @@ Pinned to an **exact immutable tag**, resolving to commit
 `21fc2ea` (v0.5.1) in `package-lock.json`. Never `#main`
 (forbidden by the framework's `docs/PUBLISHING.md`), never a range.
 
-`v0.5.1` added the deploy-verification tooling this repo's `deploy` job runs —
-`deploy-verify.mjs` and `lockfile-platform-check.mjs`. No runtime change.
+`v0.5.1` added the deploy-verification tooling. `lockfile-platform-check.mjs` runs from
+this pin (via `node_modules`); `deploy-verify.mjs` is fetched by the `deploy` job from a
+**separately pinned tag** (`v0.5.3`) because it must run before — and independently of —
+any install. The two pins move independently on purpose. No runtime change either way.
 
 `v0.4.11` was cut *for* this repo: the Shell previously rendered the phone link and
 enquiry CTA unconditionally, which on a site with neither produced `<a href="tel:"></a>`
@@ -97,7 +101,7 @@ founder-owned content, not an engineering decision. Real-page migration is gated
 
 ## Known gaps, recorded rather than hidden
 
-- **A Vercel project EXISTS and every deployment has failed.** This line previously read
+- **A Vercel project EXISTS. Every deployment failed until 2026-07-20; the first success is `5518210416`.** This line previously read
   *"No Vercel project. Nothing is deployed. Founder gate."* **That was false**, and it was
   false when written: `GET /repos/netyvee/main/deployments` returns deployment records
   created the same night, and the commit statuses were `failure`. One unrun API call
@@ -114,11 +118,28 @@ founder-owned content, not an engineering decision. Real-page migration is gated
   lose orphan ranking pages.
 - **No corporate OG image, no logo asset.** Brand decisions.
 
-## Deploy status — NOT DEPLOYED, and that is now enforced rather than narrated
+## Deploy status — DEPLOY VERIFIED, RENDER NOT VERIFIED
 
-**Every Vercel deployment of this repository has failed: six on 2026-07-20 between
-01:23 and 01:36, and one more at 06:38 after the first fix.** Meanwhile the migration
-was reported to the founder as a successful deploy with verified rendering.
+**Deployment `5518210416` reached terminal state `success` on 2026-07-20** — the first
+successful deployment in this repository's history, and the first anywhere in the estate
+proven by a polled terminal status rather than asserted.
+
+Before that, **every** deployment failed: six between 01:23 and 01:36, and more after each
+partial fix — while the migration was reported to the founder as a successful deploy with
+verified rendering. **Two independent causes**, both real, and the order mattered.
+
+| | Cause | Status |
+|---|---|---|
+| 1 | `package-lock.json` held **one** platform binary instead of nine | **fixed and proven** |
+| 2 | The Vercel project's framework preset was **not Next.js** | **fixed and proven** (`vercel.json`) |
+
+**RENDER remains unverified, and is stated that way deliberately.** The deployment URL
+sits behind Vercel deployment protection: it answers `200` with a Vercel SSO login page.
+`deploy-verify.mjs` **refuses to grep that page** rather than passing on the wrong
+document — a naive marker check would have reported success against a login screen, which
+is the same false positive in a new costume. Proving render needs a publicly reachable
+URL: either deployment protection off (a Vercel account setting) or the production domain
+at cutover.
 
 ### What was actually fixed
 
@@ -200,19 +221,22 @@ over-reach, in miniature, as the false success this file documents. The honest v
 **an ambiguous signal was correctly set aside as insufficient, and then wrongly promoted to
 disproven.**
 
-### Current status of the preset fix — COMMITTED, NOT VERIFIED
+### The preset fix — VERIFIED
 
-`vercel.json` is pushed (`20e64ba`). **It has not been proven to work**, because the
-account is rate limited for 24 hours and no deployment can start. Re-verify after the
-limit clears:
+`vercel.json` landed in `20e64ba`. That push produced no deployment at all: the account
+was refusing with `Deployment rate limited — retry in 24 hours`, so the fix was recorded
+as **committed but unverified** rather than announced as working.
+
+The limit cleared sooner than 24 hours. The next push (`c871471`) deployed, and the
+verification was **polled to a terminal `success` and read** — not inferred:
 
 ```
-node scripts/deploy-verify.mjs --repo netyvee/main --sha <sha> --timeout 900
+✓ deployment 5518210416 (Production) reached terminal state "success"
+  environment_url: https://main-a300ww2tj-vigil-s-projects1.vercel.app
 ```
 
-Stated as unverified deliberately. The fix is well-evidenced — the build log names the
-error and `vercel.json` overrides the project setting that causes it — but "well-evidenced"
-and "verified" are different words, and conflating them is what produced this document.
+The gap between "well-evidenced" and "verified" was held open for about twenty minutes
+and then closed with evidence. That is the whole discipline this file exists to record.
 
 ### The gate that now prevents this being reported as success
 
