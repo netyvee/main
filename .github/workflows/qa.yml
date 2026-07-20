@@ -112,7 +112,14 @@ jobs:
 
   deploy:
     name: deploy actually succeeded
-    needs: qa
+    # DELIBERATELY NOT `needs: qa`. Vercel deploys independently of this workflow —
+    # staffing's QA gate has been RED since 2026-07-19 and Vercel kept deploying — so
+    # gating verification behind a green QA would skip it on exactly the deploys most
+    # likely to be broken. "Did the code pass our checks" and "did the deploy succeed"
+    # are two separate facts; coupling them hides the second whenever the first fails.
+    # (Observed rather than reasoned: the first estate-wide rollout skipped this job on
+    # staffing because its unrelated content gate was red.)
+    #
     # Only on push: a pull_request build has no production deployment to verify, and
     # asserting one exists would fail every PR for the wrong reason.
     if: github.event_name == 'push'
