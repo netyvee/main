@@ -5,7 +5,8 @@ The parent-company front door for **vigilservices.co.uk**, built on the shared
 (`netyvee/app`) and published into `content/pages/*.json`; this repo holds the engine
 wiring and configuration, not copy.
 
-**Status: MAIN-01 Phase A — pilot scaffold. Not live. No DNS change. The existing
+**Status: MAIN-01 Phase A — pilot scaffold. NOT DEPLOYED (every Vercel deployment has
+failed — see "Deploy status" below). Not live. No DNS change. The existing
 WordPress site at vigilservices.co.uk remains authoritative and untouched.**
 
 ## What this repo is, and why it exists now
@@ -37,12 +38,15 @@ Identical to `netyvee/care` and `netyvee/staffing` by design:
 ### Framework pin
 
 ```
-"@vigil/web-framework": "github:netyvee/web-framework#v0.4.11"
+"@vigil/web-framework": "github:netyvee/web-framework#v0.5.0"
 ```
 
 Pinned to an **exact immutable tag**, resolving to commit
-`ee38baee5d13887b141212d1ee25249f20417c50` in `package-lock.json`. Never `#main`
+`a471acb1520f26c0340e24fd5e6e74e67ed77ff5` in `package-lock.json`. Never `#main`
 (forbidden by the framework's `docs/PUBLISHING.md`), never a range.
+
+`v0.5.0` added the deploy-verification tooling this repo's `deploy` job runs —
+`deploy-verify.mjs` and `lockfile-platform-check.mjs`. No runtime change.
 
 `v0.4.11` was cut *for* this repo: the Shell previously rendered the phone link and
 enquiry CTA unconditionally, which on a site with neither produced `<a href="tel:"></a>`
@@ -78,6 +82,13 @@ accepted GitHub commit — no consumer check, no build check, no render check
 marker string carried in the page JSON. If the content did not render, the gate fails
 even when everything upstream is green.
 
+**Read that claim precisely, because it was over-read once already.** The marker grep
+runs against a build produced **in CI**, not against the deployed site. It proves the
+approved content renders; it does not prove anything is live. It passed on every run
+while all six deployments were failing. Rendered-against-the-deployed-site verification
+needs a public URL (preview URLs sit behind Vercel SSO and answer `200` with a login
+page, which a naive grep would happily pass) and is closed at cutover.
+
 **Why not migrate a real page first?** The obvious candidate, `/about-vigil-services-ltd/`,
 carries claims the governance forbids — *"Since 2019 we worked for 100+ clients across
 UK"*, *"100+ Happy Customers"*, and testimonials attributed to apparent theme-placeholder
@@ -86,7 +97,11 @@ founder-owned content, not an engineering decision. Real-page migration is gated
 
 ## Known gaps, recorded rather than hidden
 
-- **No Vercel project.** Nothing is deployed. Founder gate (third-party account).
+- **A Vercel project EXISTS and every deployment has failed.** This line previously read
+  *"No Vercel project. Nothing is deployed. Founder gate."* **That was false**, and it was
+  false when written: `GET /repos/netyvee/main/deployments` returns deployment records
+  created the same night, and the commit statuses were `failure`. One unrun API call
+  separated the claim from the truth. See "Deploy status" below.
 - **No analytics.** The live site runs GA4 `G-KTH8TMCHTT`; the framework has no analytics
   integration. Must be carried deliberately at cutover.
 - **No cookie consent.** The live site fires GA4 unconditionally with no consent banner —
@@ -98,6 +113,57 @@ founder-owned content, not an engineering decision. Real-page migration is gated
   crawl, and Search Console indexed pages — never hand-typed, which is how migrations
   lose orphan ranking pages.
 - **No corporate OG image, no logo asset.** Brand decisions.
+
+## Deploy status — NOT DEPLOYED, and that is now enforced rather than narrated
+
+**Every Vercel deployment of this repository has failed: six on 2026-07-20 between
+01:23 and 01:36, and one more at 06:38 after the first fix.** Meanwhile the migration
+was reported to the founder as a successful deploy with verified rendering.
+
+### What was actually fixed
+
+**`package-lock.json` recorded one platform binary instead of nine.** It had been
+generated on Windows over an existing `node_modules`, which filters the tree to the
+current platform, so it held only `@next/swc-win32-x64-msvc`. Vercel builds on
+linux-x64 with `npm ci`, which installs strictly from the lockfile — no Linux SWC
+binary, no build. `netyvee/care`'s working lockfile has all nine.
+
+Regenerated from a clean tree. The repository is now **proven good on the deploy
+platform**: CI run `29722264215` ran `npm ci` → lockfile check → content gate → build
+→ render assertion on ubuntu-latest, **all green**, including the pilot marker.
+
+### What is still broken
+
+**The Vercel deployment still fails** (`5517791277`, `dpl_CAt5aPNM1vKfgmS1AYXoo1bkqAJ3`)
+even though the identical install and build pass on Linux in CI. So the remaining cause
+is **not in this repository** — it is Vercel project configuration or account state.
+
+Narrowed on evidence, not assumption:
+
+| Observation | What it rules out |
+|---|---|
+| `npm ci` + `next build` green on ubuntu-latest with the committed lockfile | the code, the lockfile, the framework pin, the Node version |
+| `netyvee/care` deployed **successfully** at 02:21, between this project's failures | an account-wide outage or a global rate limit |
+| Failures are 100% of this project's deployments, from its very first commit | a transient fault |
+| One commit status carried `?upgradeToPro=build-rate-limit` | *nothing on its own* — care deploying fine in the same window contradicts a plain account limit |
+
+**Reading the actual Vercel build log needs a Vercel credential, and there is none in
+this environment** (no `VERCEL_TOKEN`, no `~/.vercel`, no CLI auth). That is a genuine
+third-party-account gate — recorded, not worked around, and not guessed at. Everything
+diagnosable from GitHub has been diagnosed.
+
+### The gate that now prevents this being reported as success
+
+`.github/workflows/qa.yml` gained a `deploy` job running `deploy-verify.mjs` from
+web-framework **v0.5.0**. It polls the GitHub deployment status to a **terminal** state:
+absence of a deployment is failure, non-terminal is not success, and a timeout is failure
+rather than an assumed pass. It needs only `GITHUB_TOKEN` — Vercel reports its outcome to
+the GitHub deployments API, so this was **never** blocked on the MAIN-G2 founder gate, as
+the audit had recorded.
+
+CI run `29722264215` is the proof it works: the `qa` job passed and the `deploy` job
+**failed the run because Vercel failed**. That is the first time a deploy failure in this
+repository produced a red build.
 
 ## CI note — Actions cannot start runs here (GitHub incident, 2026-07-20)
 
