@@ -43,8 +43,14 @@ on:
 
 # Actions economy (CI-ECON-01 / B-CI-02): collapse superseded runs. The CRM
 # auto-publish burst pushes several [crm-auto] commits to main in quick succession;
-# they all share refs/heads/main and collapse to one effective run. Safe here because
-# this workflow has no deploy job, so cancelling never interrupts a deployment.
+# they all share refs/heads/main and collapse to one effective run.
+#
+# This used to add "safe because this workflow has no deploy job" — no longer true, so
+# stating the current reason instead of leaving a stale one: the `deploy` job VERIFIES a
+# deployment, it does not perform one. Vercel builds independently of this workflow, so
+# cancelling a superseded run never interrupts a deployment. The cost is that the
+# superseded commit's verification is abandoned — acceptable, because the newer commit
+# on the same branch gets verified moments later and that is the state that matters.
 concurrency:
   group: qa-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -131,7 +137,7 @@ jobs:
         run: |
           set -euo pipefail
           curl -sSfL -o /tmp/deploy-verify.mjs \
-            https://raw.githubusercontent.com/netyvee/web-framework/v0.5.0/scripts/deploy-verify.mjs
+            https://raw.githubusercontent.com/netyvee/web-framework/v0.5.1/scripts/deploy-verify.mjs
           node /tmp/deploy-verify.mjs \
             --repo "${{ github.repository }}" \
             --sha "${{ github.sha }}" \

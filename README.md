@@ -38,14 +38,14 @@ Identical to `netyvee/care` and `netyvee/staffing` by design:
 ### Framework pin
 
 ```
-"@vigil/web-framework": "github:netyvee/web-framework#v0.5.0"
+"@vigil/web-framework": "github:netyvee/web-framework#v0.5.1"
 ```
 
 Pinned to an **exact immutable tag**, resolving to commit
-`a471acb1520f26c0340e24fd5e6e74e67ed77ff5` in `package-lock.json`. Never `#main`
+`21fc2ea` (v0.5.1) in `package-lock.json`. Never `#main`
 (forbidden by the framework's `docs/PUBLISHING.md`), never a range.
 
-`v0.5.0` added the deploy-verification tooling this repo's `deploy` job runs —
+`v0.5.1` added the deploy-verification tooling this repo's `deploy` job runs —
 `deploy-verify.mjs` and `lockfile-platform-check.mjs`. No runtime change.
 
 `v0.4.11` was cut *for* this repo: the Shell previously rendered the phone link and
@@ -155,7 +155,7 @@ diagnosable from GitHub has been diagnosed.
 ### The gate that now prevents this being reported as success
 
 `.github/workflows/qa.yml` gained a `deploy` job running `deploy-verify.mjs` from
-web-framework **v0.5.0**. It polls the GitHub deployment status to a **terminal** state:
+web-framework **v0.5.1**. It polls the GitHub deployment status to a **terminal** state:
 absence of a deployment is failure, non-terminal is not success, and a timeout is failure
 rather than an assumed pass. It needs only `GITHUB_TOKEN` — Vercel reports its outcome to
 the GitHub deployments API, so this was **never** blocked on the MAIN-G2 founder gate, as
