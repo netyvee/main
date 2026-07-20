@@ -18,6 +18,13 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # Manual trigger. Added after this repo's first three runs all returned
+  # `startup_failure` during a GitHub service incident (githubstatus.com reported a
+  # Minor Service Outage; the Actions API returned 503/504 for ~1.5 hours). The
+  # workflow itself was registered and active throughout, so the failures were the
+  # incident rather than the file — but with no way to re-trigger without pushing a
+  # commit, "is CI actually green?" could not be answered at all. It can now.
+  workflow_dispatch:
 
 # Actions economy (CI-ECON-01 / B-CI-02): collapse superseded runs. The CRM
 # auto-publish burst pushes several [crm-auto] commits to main in quick succession;
