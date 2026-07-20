@@ -132,25 +132,57 @@ Regenerated from a clean tree. The repository is now **proven good on the deploy
 platform**: CI run `29722264215` ran `npm ci` → lockfile check → content gate → build
 → render assertion on ubuntu-latest, **all green**, including the pilot marker.
 
-### What is still broken
+### The second cause — wrong framework preset (`vercel.json`)
 
-**The Vercel deployment still fails** (`5517791277`, `dpl_CAt5aPNM1vKfgmS1AYXoo1bkqAJ3`)
-even though the identical install and build pass on Linux in CI. So the remaining cause
-is **not in this repository** — it is Vercel project configuration or account state.
+The Vercel build log, once obtained, ended:
 
-Narrowed on evidence, not assumption:
+```
+ ✓ Generating static pages (6/6)
+Error: No Output Directory named "public" found after the Build completed.
+```
 
-| Observation | What it rules out |
+**The build succeeds.** All six pages generate. Vercel then looks for a static
+`public/` directory, which is what it does when a project's **framework preset is not
+Next.js** — it treats the repo as a plain static site and never applies the Next.js
+adapter, so `.next/` is ignored and the deployment fails at the output step.
+
+**Why this project and no other:** it was created while `netyvee/main` had **zero
+commits**. Vercel had nothing to detect, so the preset fell back to "Other". `care` and
+`staffing` were created against populated repos and were detected correctly. That is
+why 100% of this project's deployments failed, starting with the very first one — the
+misconfiguration predates every commit in this repository.
+
+`vercel.json` overrides dashboard project settings, so the fix lives in the repo rather
+than in an account nobody else can reach:
+
+```json
+{ "framework": "nextjs", "installCommand": "npm ci", "buildCommand": "npm run build" }
+```
+
+`installCommand` is pinned to `npm ci` deliberately. It is Vercel's default when a
+lockfile is present, but this repository has already been bitten once by an install that
+differed from the one being tested — stating it removes the assumption.
+
+### Diagnosis trail, kept because the reasoning was sound before the log arrived
+
+Before the build log was available, the cause was narrowed to "Vercel project
+configuration or account state" on this evidence — which held up:
+
+| Observation | What it ruled out |
 |---|---|
 | `npm ci` + `next build` green on ubuntu-latest with the committed lockfile | the code, the lockfile, the framework pin, the Node version |
 | `netyvee/care` deployed **successfully** at 02:21, between this project's failures | an account-wide outage or a global rate limit |
 | Failures are 100% of this project's deployments, from its very first commit | a transient fault |
 | One commit status carried `?upgradeToPro=build-rate-limit` | *nothing on its own* — care deploying fine in the same window contradicts a plain account limit |
 
-**Reading the actual Vercel build log needs a Vercel credential, and there is none in
-this environment** (no `VERCEL_TOKEN`, no `~/.vercel`, no CLI auth). That is a genuine
-third-party-account gate — recorded, not worked around, and not guessed at. Everything
-diagnosable from GitHub has been diagnosed.
+The last row is worth keeping: `upgradeToPro=build-rate-limit` was the single most
+tempting clue in the whole investigation and it was **a red herring**. Acting on it would
+have produced a confident wrong answer — the exact failure mode this repository exists to
+eliminate.
+
+**Both causes were real.** The lockfile fix was not wasted work: with a Windows-only
+lockfile the build died before it ever reached the output step, so the preset error could
+not surface. Fixing it is what made the real error visible.
 
 ### The gate that now prevents this being reported as success
 
