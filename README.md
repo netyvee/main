@@ -99,6 +99,28 @@ founder-owned content, not an engineering decision. Real-page migration is gated
   lose orphan ranking pages.
 - **No corporate OG image, no logo asset.** Brand decisions.
 
+## CI note — push-triggered runs were binding to a ghost workflow
+
+The first four pushes to this repository all produced `startup_failure` with no jobs and
+no check-runs. Diagnosis, recorded so the next session does not repeat it:
+
+| Check | Result |
+|---|---|
+| YAML valid? | **Yes** — parses identically to `netyvee/care`'s `qa.yml` (same top-level keys, same job, 6 steps) |
+| BOM / CRLF / tabs? | None |
+| Actions enabled? | **Yes** — `enabled: true`, `allowed_actions: all` |
+| Workflow registered? | **Yes** — `316394152`, `QA Gate`, `state=active` |
+| Runs attributed to? | **`316395111` — a workflow ID that does not exist in `/actions/workflows`** |
+
+Every push-triggered run was bound to a **workflow ID that was not the registered one**.
+GitHub's status page reported a *Minor Service Outage* throughout the window in which
+this repository was created, and its Actions API returned 503/504 for roughly 90 minutes,
+so the most likely explanation is a ghost registration created mid-incident.
+
+**`workflow_dispatch` against the real workflow ID works**, which is what proved the file
+and the registration were both fine. If push-triggered runs are still failing, dispatch
+manually and, if it persists, force re-registration by renaming the workflow file.
+
 ## Local development
 
 ```bash
