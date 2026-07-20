@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "check:content": "node scripts/content-check.mjs"
+    "check:content": "node scripts/content-check.mjs",
+    "manifest": "node scripts/generate-manifest.mjs",
+    "manifest:check": "node scripts/generate-manifest.mjs --check",
+    "test:manifest": "node scripts/manifest-test.mjs"
   },
   "dependencies": {
     "@vigil/web-framework": "github:netyvee/web-framework#v0.5.1",

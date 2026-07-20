@@ -78,6 +78,23 @@ jobs:
         # it is the check that would have caught the MAIN-01 deploy failure.
         # `npm ci` never rewrites package-lock.json, so this reads what was committed.
         run: node node_modules/@vigil/web-framework/scripts/lockfile-platform-check.mjs
+      - name: Site manifest is fresh (SM-01)
+        # The manifest DECLARES the routes and absolute outbound links this repository
+        # intends to render. It exists because SG-02 validates links the CRM knows
+        # about, and the eight cross-site URLs in config/site.ts are not among them —
+        # they render on every page and are validated by nothing.
+        #
+        # This step fails if the committed manifest no longer matches the repository,
+        # so a new absolute link cannot be added without the manifest recording it.
+        # It compares CONTENT hashes, not timestamps, so it is deterministic.
+        #
+        # It also fails on an unclassified destination host or a missing relationship —
+        # SM-01's "no silent omissions" rule. Deliberately NO network: a declaration is
+        # not verification, and pretending otherwise is the defect this estate keeps
+        # paying for.
+        run: npm run manifest:check
+      - name: Site manifest tests (SM-01)
+        run: npm run test:manifest
       - name: Corporate content gate (content/pages/*.json)
         run: node scripts/content-check.mjs
       - name: Build
