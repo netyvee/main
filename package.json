@@ -10,10 +10,11 @@
     "check:content": "node scripts/content-check.mjs",
     "manifest": "node scripts/generate-manifest.mjs",
     "manifest:check": "node scripts/generate-manifest.mjs --check",
-    "test:manifest": "node scripts/manifest-test.mjs"
+    "test:manifest": "node scripts/manifest-test.mjs",
+    "test:navrel": "node scripts/nav-rel-roundtrip.mjs"
   },
   "dependencies": {
-    "@vigil/web-framework": "github:netyvee/web-framework#v0.5.1",
+    "@vigil/web-framework": "github:netyvee/web-framework#v0.6.0",
     "next": "14.2.35",
     "react": "^18",
     "react-dom": "^18"
