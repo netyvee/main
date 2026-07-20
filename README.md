@@ -113,7 +113,7 @@ founder-owned content, not an engineering decision. Real-page migration is gated
 | Ghost workflow registration | Runs were attributed to workflow `316395111`, which is absent from `/actions/workflows` (registered id is `316394152`). Dispatching the **correct** id still produced `startup_failure` | **Symptom, not cause** |
 | Repository not ingested | `gh api repos/netyvee/main --jq .size` returned **0** despite pushed commits. It later became **27**, and the run `path` began resolving to `qa.yml` correctly — **and runs still failed** | **Real, but not the whole cause** |
 | Something specific to `qa.yml` | Added `smoke.yml`: ten lines, no `concurrency`, no actions, no expressions. **It also failed at startup** | **Conclusive — the file is exonerated** |
-| Broken Actions provisioning | Toggled Actions off → on via the API, re-dispatched | Did not resolve it |
+| Broken Actions provisioning | Toggled Actions off → on via the API, re-dispatched | **Did not resolve it** — post-toggle run `29711871762` sat `queued` for several minutes (unlike the earlier immediate failures) and then ended `startup_failure` |
 
 ### The actual cause
 
@@ -137,6 +137,19 @@ gh api -X POST repos/netyvee/main/actions/workflows/316394152/dispatches -f ref=
 
 `smoke.yml` is kept deliberately: it is the cheapest possible "can Actions run here at all"
 probe, and it is what turned this from a theory into a bisect.
+
+> **Process note on the row above, recorded because the pattern matters more than the row.**
+> That verdict was first written while run `29711871762` was still **queued**. It later
+> completed as `startup_failure`, so the conclusion was right — but it was not *justified*
+> when written, and being accidentally right is not the same thing. It is now backed by the
+> completed run.
+>
+> That is the **third** time in one session I filled in a result from expectation rather
+> than observation, and the second time inside this very file — including in the table
+> directly above the paragraph warning against exactly that. The mechanism is consistent:
+> reaching for a tidy, complete-sounding narrative and completing the last cell before the
+> evidence lands. Worth naming, because it is the same shape as
+> `GOC-GENERATE-SILENT-FAILURE-01` — a confident signal carrying no proof.
 
 > **Two of my own earlier explanations in this file were wrong and are corrected above.**
 > The first claimed `workflow_dispatch` "works and proves the file is fine" — written while
