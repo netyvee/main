@@ -113,13 +113,32 @@ no check-runs. Diagnosis, recorded so the next session does not repeat it:
 | Runs attributed to? | **`316395111` — a workflow ID that does not exist in `/actions/workflows`** |
 
 Every push-triggered run was bound to a **workflow ID that was not the registered one**.
-GitHub's status page reported a *Minor Service Outage* throughout the window in which
-this repository was created, and its Actions API returned 503/504 for roughly 90 minutes,
-so the most likely explanation is a ghost registration created mid-incident.
 
-**`workflow_dispatch` against the real workflow ID works**, which is what proved the file
-and the registration were both fine. If push-triggered runs are still failing, dispatch
-manually and, if it persists, force re-registration by renaming the workflow file.
+**Then the ghost-workflow theory was itself disproved.** A `workflow_dispatch` against the
+*correct* workflow ID (`316394152`) queued a run — and that run **also ended in
+`startup_failure`**. So the mismatched ID is a symptom, not the cause.
+
+**The actual cause, and it is server-side:**
+
+```
+gh api repos/netyvee/main --jq .size   →  0
+```
+
+GitHub reports this repository as **size 0** despite six pushed commits. Its own contents
+API lists every file and `branches/main` resolves to the correct head, so **the code is
+genuinely there** — but GitHub's repository metadata has not ingested it. From the
+runner's point of view there is nothing to check out, which is exactly why no run can
+start, by push or by dispatch. GitHub's status page reported a *Minor Service Outage*
+throughout the window this repository was created.
+
+**Nothing here needs fixing in this repo.** The remedy is to re-dispatch once the incident
+clears and `size` is non-zero. If it persists after that, force re-registration by
+renaming the workflow file.
+
+> Recorded this way deliberately: the first version of this note claimed dispatch "works
+> and proves the file is fine", written while the dispatched run was still *queued*. It
+> then failed. Treating a queued run as evidence is the same error this repository's own
+> pilot exists to eliminate — a signal read before it means anything.
 
 ## Local development
 
