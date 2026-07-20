@@ -152,7 +152,7 @@ jobs:
         run: |
           set -euo pipefail
           curl -sSfL -o /tmp/deploy-verify.mjs \
-            https://raw.githubusercontent.com/netyvee/web-framework/v0.5.2/scripts/deploy-verify.mjs
+            https://raw.githubusercontent.com/netyvee/web-framework/v0.5.3/scripts/deploy-verify.mjs
           node /tmp/deploy-verify.mjs \
             --repo "${{ github.repository }}" \
             --sha "${{ github.sha }}" \

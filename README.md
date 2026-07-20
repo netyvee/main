@@ -175,14 +175,44 @@ configuration or account state" on this evidence — which held up:
 | Failures are 100% of this project's deployments, from its very first commit | a transient fault |
 | One commit status carried `?upgradeToPro=build-rate-limit` | *nothing on its own* — care deploying fine in the same window contradicts a plain account limit |
 
-The last row is worth keeping: `upgradeToPro=build-rate-limit` was the single most
-tempting clue in the whole investigation and it was **a red herring**. Acting on it would
-have produced a confident wrong answer — the exact failure mode this repository exists to
-eliminate.
-
 **Both causes were real.** The lockfile fix was not wasted work: with a Windows-only
 lockfile the build died before it ever reached the output step, so the preset error could
 not surface. Fixing it is what made the real error visible.
+
+### A correction to the row above, written the same day
+
+The table originally added: *"`upgradeToPro=build-rate-limit` was the single most tempting
+clue in the whole investigation and it was **a red herring**."* **That was too strong, and
+it is corrected here rather than deleted.**
+
+The push carrying the `vercel.json` fix produced no deployment at all, and the commit
+status read:
+
+```
+[Vercel] failure — Deployment rate limited — retry in 24 hours.
+```
+
+So the rate limit is **real**. What the evidence supported at the time was narrower: it
+could not be the *sole* cause, because `care` deployed successfully in the same window and
+because the framework-preset error is visible in the build log of deployments that did
+run. Calling it a red herring overstated that into "not a factor" — which is the same
+over-reach, in miniature, as the false success this file documents. The honest version:
+**an ambiguous signal was correctly set aside as insufficient, and then wrongly promoted to
+disproven.**
+
+### Current status of the preset fix — COMMITTED, NOT VERIFIED
+
+`vercel.json` is pushed (`20e64ba`). **It has not been proven to work**, because the
+account is rate limited for 24 hours and no deployment can start. Re-verify after the
+limit clears:
+
+```
+node scripts/deploy-verify.mjs --repo netyvee/main --sha <sha> --timeout 900
+```
+
+Stated as unverified deliberately. The fix is well-evidenced — the build log names the
+error and `vercel.json` overrides the project setting that causes it — but "well-evidenced"
+and "verified" are different words, and conflating them is what produced this document.
 
 ### The gate that now prevents this being reported as success
 
