@@ -112,6 +112,14 @@ jobs:
 
   deploy:
     name: deploy actually succeeded
+    # EXPLICIT PERMISSIONS, not the repo default. vigil-cleaning's first run failed
+    # with GitHub API 403 "Resource not accessible by integration" because its default
+    # workflow token had no deployments scope. Declaring it here makes the job work the
+    # same way in every repo regardless of per-repo defaults, instead of silently
+    # depending on a setting nobody reads.
+    permissions:
+      contents: read
+      deployments: read
     # DELIBERATELY NOT `needs: qa`. Vercel deploys independently of this workflow —
     # staffing's QA gate has been RED since 2026-07-19 and Vercel kept deploying — so
     # gating verification behind a green QA would skip it on exactly the deploys most
@@ -144,7 +152,7 @@ jobs:
         run: |
           set -euo pipefail
           curl -sSfL -o /tmp/deploy-verify.mjs \
-            https://raw.githubusercontent.com/netyvee/web-framework/v0.5.1/scripts/deploy-verify.mjs
+            https://raw.githubusercontent.com/netyvee/web-framework/v0.5.2/scripts/deploy-verify.mjs
           node /tmp/deploy-verify.mjs \
             --repo "${{ github.repository }}" \
             --sha "${{ github.sha }}" \
