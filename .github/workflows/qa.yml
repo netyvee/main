@@ -1,0 +1,68 @@
+name: QA Gate
+
+# MAIN-01 Phase A — corporate main site.
+#
+# Build smoke + corporate content gate on every push/PR. The content gate stays
+# CRM-side (PageHealth + the forbidden-claims gate in netyvee/app); this gate proves
+# the site builds on its pinned framework and that no division phone can appear in
+# the corporate output.
+#
+# CHECK ONLY — no deploy job. Vercel deploys on push independently, once a project is
+# linked (an open founder gate, MAIN-G2). Note that this decoupling is exactly the
+# defect PUB-01 exists to close: staffing's QA gate went red on 2026-07-19 and Vercel
+# deployed anyway. Until PUB-01 lands, a green tick here does NOT mean the deployed
+# site is good — it means the build and the content gate passed.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Actions economy (CI-ECON-01 / B-CI-02): collapse superseded runs. The CRM
+# auto-publish burst pushes several [crm-auto] commits to main in quick succession;
+# they all share refs/heads/main and collapse to one effective run. Safe here because
+# this workflow has no deploy job, so cancelling never interrupts a deployment.
+concurrency:
+  group: qa-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  qa:
+    name: build + corporate content gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install (framework pin resolves from the public git tag)
+        run: npm install
+      - name: Corporate content gate (content/pages/*.json)
+        run: node scripts/content-check.mjs
+      - name: Build
+        run: npm run build
+      - name: Assert the pilot page actually rendered
+        # THE POINT OF THE WHOLE PILOT. A successful build is not evidence that the
+        # published content reached the page — the CRM already reports "published" on
+        # nothing more than an accepted GitHub commit (PUB-01 / D-092). So grep the
+        # prerendered HTML for the marker string carried in the page JSON. If the
+        # content did not render, this fails, even though everything upstream is green.
+        run: |
+          set -euo pipefail
+          FILE=".next/server/app/pilot-render-check.html"
+          if [ ! -f "$FILE" ]; then
+            echo "✖ $FILE was not prerendered. Published content did not reach a page."
+            find .next/server/app -name '*.html' -print || true
+            exit 1
+          fi
+          if ! grep -q 'RENDER-PILOT-MARKER MAIN-01 PHASE-A' "$FILE"; then
+            echo "✖ Marker absent from $FILE — the page built but the approved content did not render."
+            exit 1
+          fi
+          if ! grep -q '11756806' "$FILE"; then
+            echo "✖ Company registration absent — the corporate identity block did not render."
+            exit 1
+          fi
+          echo "✓ Pilot page rendered with the approved content and corporate identity."

@@ -1,0 +1,22 @@
+/* Corporate main site adopts the framework design tokens (single palette source). */
+@import '@vigil/web-framework/src/tokens/tokens.css';
+
+/* No Tailwind directives here, unlike care/staffing. The framework's sections and
+   Shell render with inline style={} driven by the page JSON `brand` block, so this
+   site needs no utility layer — and omitting it keeps tailwind, postcss and
+   autoprefixer out of the dependency tree entirely. Add them only if a future
+   corporate page genuinely needs utility classes. */
+
+/* Per-site font wiring: the type SCALE is the framework's; the FAMILIES are the
+   shared Vigil pairing (DM Sans + Playfair via next/font, set on <html> in
+   layout.tsx) — DESIGN-SYSTEM.md, the same pairing as every other Vigil site. */
+:root {
+  color-scheme: dark;
+  --vf-font-display: var(--font-playfair), ui-serif, Georgia, serif;
+  --vf-font-body: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--vf-font-body);
+}

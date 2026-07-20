@@ -1,0 +1,60 @@
+{
+    "schema_version": 1,
+    "site": "main",
+    "slug": "pilot-render-check",
+    "page_type": "supporting",
+    "seo": {
+        "title": "Render pilot \u2014 Vigil Services Ltd",
+        "noindex": true,
+        "canonical": "https://vigilservices.co.uk/pilot-render-check/",
+        "description": "Internal render verification page for the corporate site publishing pipeline. Not indexed and not linked from the site.",
+        "schema_type": null
+    },
+    "brand": {
+        "bg": "#0a1628",
+        "text": "#ffffff",
+        "cta": "#4ecdc4",
+        "secondary": "#7fb2d4"
+    },
+    "site_settings": {
+        "logo": [],
+        "favicon": null,
+        "og": [],
+        "social": [],
+        "analytics": [],
+        "seo_defaults": [],
+        "nav": [],
+        "footer": []
+    },
+    "nap": {
+        "phone": "",
+        "email": "info@vigilservices.co.uk",
+        "address": "Ferguson House, 113 Cranbrook Road, Ilford IG1 4PU",
+        "trading_name": "Vigil Services Ltd",
+        "enquiry_url": ""
+    },
+    "sections": [
+        {
+            "id": "pilot-intro",
+            "type": "prose",
+            "fields": {
+                "body": "This page exists to verify that content published from the Vigil CRM reaches the corporate website repository, builds, and renders exactly as approved. It is a technical checkpoint, not marketing content, and it is excluded from search indexing."
+            }
+        },
+        {
+            "id": "pilot-identity",
+            "type": "prose",
+            "fields": {
+                "body": "Vigil Services Ltd is registered in England and Wales, company registration 11756806, at Ferguson House, 113 Cranbrook Road, Ilford IG1 4PU."
+            }
+        },
+        {
+            "id": "pilot-marker",
+            "type": "prose",
+            "fields": {
+                "body": "RENDER-PILOT-MARKER MAIN-01 PHASE-A"
+            }
+        }
+    ],
+    "status": "approved"
+}
