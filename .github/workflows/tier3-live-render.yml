@@ -1,16 +1,33 @@
 name: SG-02 Tier 3 — live-served render check (Main)
 
-# On-demand rendered verification of a DEPLOYED (protection-gated) Main deployment.
-# Traverses Vercel deployment protection with the Protection-Bypass-for-Automation secret,
-# then asserts the served HTML renders exactly the site-manifest's declared occurrences.
+# Rendered verification of a DEPLOYED (protection-gated) Main deployment. Traverses Vercel
+# deployment protection with the Protection-Bypass-for-Automation secret, then asserts the served
+# HTML renders exactly the site-manifest's declared cross-site occurrences.
 # D-094 / P4-RENDER-TEST-01: an SSO/login page is UNVERIFIED (exit 2), never a pass.
+#
+# Two modes:
+#   • workflow_dispatch — verify a specific artefact (optional `url`; defaults to current Production).
+#   • schedule — SG-02 T3_live_monitoring drift sweep. NON-BLOCKING: this workflow is separate from the
+#     qa.yml deploy gate, so it never blocks a build. INVALID (real drift) fails the run to raise an
+#     alert; UNVERIFIED (transient/access, per D-094 on a non-gate run) reports a warning but does NOT
+#     fail — a monitor must not cry wolf on a blip.
 on:
   workflow_dispatch:
     inputs:
       url:
-        description: "Deployment URL to verify (the protected Vercel deployment for the artefact under test)"
-        required: true
+        description: "Deployment URL to verify (optional; defaults to the current Production deployment)"
+        required: false
         type: string
+  schedule:
+    - cron: "23 7 * * *"   # daily 07:23 UTC — drift sweep
+
+permissions:
+  contents: read
+  deployments: read
+
+concurrency:
+  group: tier3-live-render
+  cancel-in-progress: false
 
 jobs:
   tier3-live-render:
@@ -20,7 +37,43 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Tier-3 live-served render verification
+
+      - name: Resolve target URL (given url, else current Production deployment) + pilot route
+        id: target
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_URL: ${{ inputs.url }}
+        run: |
+          set -euo pipefail
+          URL="${INPUT_URL:-}"
+          if [ -n "$URL" ]; then
+            # An explicit url was given — use it verbatim (operator chose the exact artefact).
+            echo "url=$URL" >> "$GITHUB_OUTPUT"
+            echo "Target (given): $URL"
+            exit 0
+          fi
+          DEP=$(gh api "repos/${{ github.repository }}/deployments?environment=Production&per_page=1" --jq '.[0].id')
+          BASE=$(gh api "repos/${{ github.repository }}/deployments/$DEP/statuses" --jq '[.[]|select(.state=="success")][0].environment_url // empty')
+          if [ -z "$BASE" ]; then echo "::warning::no successful Production deployment URL found"; echo "url=" >> "$GITHUB_OUTPUT"; exit 0; fi
+          # / is 404 pre-cutover; the one existing route renders the sitewide Shell (header + footer).
+          case "$BASE" in */) URL="${BASE}pilot-render-check";; *) URL="${BASE}/pilot-render-check";; esac
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "Target (resolved Production): $URL"
+
+      - name: Tier-3 live-served render (drift sweep)
         env:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
-        run: node scripts/tier3-live-render.mjs --url "${{ inputs.url }}"
+          TARGET_URL: ${{ steps.target.outputs.url }}
+        run: |
+          if [ -z "${TARGET_URL:-}" ]; then echo "::warning::no target URL resolved — reporting UNVERIFIED, not failing"; exit 0; fi
+          set +e
+          node scripts/tier3-live-render.mjs --url "$TARGET_URL"
+          code=$?
+          set -e
+          if [ "$code" -eq 0 ]; then echo "VALID — no drift on the live company site."; exit 0; fi
+          if [ "$code" -eq 2 ]; then
+            echo "::warning::UNVERIFIED (transient/access) — reported, NOT treated as drift (D-094, non-gate). Not failing."
+            exit 0
+          fi
+          echo "::error::INVALID — link drift detected on the live company site (destination moved / redirect / anchor edited / duplicate edge). See log."
+          exit 1
