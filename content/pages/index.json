@@ -43,8 +43,9 @@
             "id": "home-hero",
             "type": "continuous_division_hero",
             "fields": {
-                "_note": "One continuous hero (live-site pattern): a single team photograph, headline in a top-left scrim, and the four division names/links in a bottom scrim on the SAME photo — no separate white card section. Team image is a provisional crop from the founder reference; replace with a licensed production photograph before cutover.",
-                "hero_image": { "url": "/images/hero-team.jpg", "alt": "Vigil care, security and cleaning staff standing together in a commercial setting." },
+                "_note": "One continuous hero. Balanced four-division representation (founder review): art-directed composites — desktop is four equal 25% panels (Care, Staffing, Security, Cleaning, left→right, aligned to the gateway below); mobile is a 2×2. A full-width top scrim carries the headline without singling out any division. Provisional composites built from the founder reference; replace with a licensed production photograph before cutover.",
+                "hero_image": { "url": "/images/hero-divisions-desktop.jpg", "alt": "Vigil care, care-staffing, security and cleaning professionals — one from each division." },
+                "hero_image_mobile": { "url": "/images/hero-divisions-mobile.jpg", "alt": "Vigil care, care-staffing, security and cleaning professionals — one from each division." },
                 "heading": "Essential people.\nExceptional service.",
                 "sub": "Delivering care, security, staffing and cleaning services you can trust, every day.",
                 "items": [
