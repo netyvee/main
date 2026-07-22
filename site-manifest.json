@@ -3,7 +3,7 @@
   "site": "main",
   "domain": "https://vigilservices.co.uk",
   "repository": "netyvee/main",
-  "framework_pin": "github:netyvee/web-framework#v0.6.0",
+  "framework_pin": "github:netyvee/web-framework#v0.6.2",
   "declaration_only": true,
   "verification_note": "This manifest declares intent from a commit. It is NOT network verification (SG-02 Tier 2) and NOT rendered verification (SG-02 Tier 3). A consumer must re-validate every claimed classification against the CRM SiteRegistry.",
   "routes": [
@@ -13,7 +13,48 @@
       "indexability_expectation": "noindex",
       "publication_status": "unknown",
       "content_source": "content/pages/index.json",
-      "outbound_links": []
+      "outbound_links": [
+        {
+          "href": "https://care.vigilservices.co.uk/",
+          "anchor_text": "",
+          "placement": "page_content",
+          "scope": "page_specific",
+          "source_file": "content/pages/index.json",
+          "source_line": null,
+          "origin": "crm_published",
+          "rel": null
+        },
+        {
+          "href": "https://staffing.vigilservices.co.uk/",
+          "anchor_text": "",
+          "placement": "page_content",
+          "scope": "page_specific",
+          "source_file": "content/pages/index.json",
+          "source_line": null,
+          "origin": "crm_published",
+          "rel": null
+        },
+        {
+          "href": "https://security.vigilservices.co.uk/",
+          "anchor_text": "",
+          "placement": "page_content",
+          "scope": "page_specific",
+          "source_file": "content/pages/index.json",
+          "source_line": null,
+          "origin": "crm_published",
+          "rel": null
+        },
+        {
+          "href": "https://cleaning.vigilservices.co.uk/",
+          "anchor_text": "",
+          "placement": "page_content",
+          "scope": "page_specific",
+          "source_file": "content/pages/index.json",
+          "source_line": null,
+          "origin": "crm_published",
+          "rel": null
+        }
+      ]
     },
     {
       "route": "/pilot-render-check",
@@ -68,8 +109,6 @@
       "destination_classification": "division",
       "division": "care",
       "relationship_type": "corporate_to_division",
-      "founder_gate": "MAIN-G6",
-      "gate_status": "UNRESOLVED",
       "duplicate_occurrences": 2
     },
     {
@@ -85,8 +124,6 @@
       "destination_classification": "division",
       "division": "staffing",
       "relationship_type": "corporate_to_division",
-      "founder_gate": "MAIN-G6",
-      "gate_status": "UNRESOLVED",
       "duplicate_occurrences": 2
     },
     {
@@ -132,8 +169,6 @@
       "destination_classification": "division",
       "division": "care",
       "relationship_type": "corporate_to_division",
-      "founder_gate": "MAIN-G6",
-      "gate_status": "UNRESOLVED",
       "duplicate_occurrences": 2
     },
     {
@@ -149,8 +184,6 @@
       "destination_classification": "division",
       "division": "staffing",
       "relationship_type": "corporate_to_division",
-      "founder_gate": "MAIN-G6",
-      "gate_status": "UNRESOLVED",
       "duplicate_occurrences": 2
     }
   ],
@@ -192,7 +225,7 @@
     }
   ],
   "unresolved_dynamic_links": [],
-  "commit_sha": "b3c08b69ecc9fba2a3cf982d62e38275c8f9e419",
-  "generated_at": "2026-07-22T12:22:09.532Z",
-  "content_hash": "aa44966ce65090d5a2baef1239da32a38b098b50a5b718410186fe36c9fd086a"
+  "commit_sha": "4f0f117b9f86852f9325279d83d46373b8020a86",
+  "generated_at": "2026-07-22T14:13:49.810Z",
+  "content_hash": "3564b46877199ca29770d1c3414500ce9e61fd4288a58c75adda9e43e50a63bf"
 }

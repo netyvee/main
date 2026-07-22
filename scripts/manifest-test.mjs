@@ -164,14 +164,14 @@ check('represents corporate_to_division for every division link', () => {
     'division links must be corporate_to_division (D-033 clause 4)');
 });
 
-// 11. MAIN-G6 must remain unresolved.
-check('inventories the deferred divisions WITHOUT resolving MAIN-G6', () => {
-  const gated = m.sitewide_outbound_links.filter((l) => l.founder_gate === 'MAIN-G6');
-  assert(gated.length === 4, `expected 4 gated links (care + staffing, nav + footer), got ${gated.length}`);
-  assert(gated.every((l) => l.gate_status === 'UNRESOLVED'),
-    'a gated link must never be recorded as approved');
-  assert(gated.every((l) => ['care', 'staffing'].includes(l.division)),
-    'only the DEFERRED divisions are gated');
+// 11. MAIN-G6 RESOLVED 2026-07-22 (D-101): all four divisions approved for public listing.
+check('MAIN-G6 resolved (D-101) — no division link remains UNRESOLVED-gated', () => {
+  const stillGated = m.sitewide_outbound_links.filter((l) => l.gate_status === 'UNRESOLVED');
+  assert(stillGated.length === 0, `MAIN-G6 is resolved; expected 0 UNRESOLVED links, got ${stillGated.length}`);
+  // All four divisions are now listed corporate->division (8 occurrences: 4 nav + 4 footer).
+  const divisions = new Set(m.sitewide_outbound_links.map((l) => l.division));
+  assert(['cleaning', 'security', 'care', 'staffing'].every((d) => divisions.has(d)),
+    'all four divisions must be present as corporate->division links');
 });
 
 // 12. Duplicates.

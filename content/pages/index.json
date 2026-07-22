@@ -4,10 +4,10 @@
     "slug": "",
     "page_type": "supporting",
     "seo": {
-        "title": "Vigil Services Ltd — London care, staffing, security & cleaning",
+        "title": "Vigil Services Ltd — care, staffing, security and cleaning",
         "noindex": true,
         "canonical": "/",
-        "description": "Vigil Services Ltd is the parent group behind Vigil's London home care, healthcare staffing, security and commercial cleaning divisions. Choose the service you need from the menu.",
+        "description": "Vigil Services Ltd is the parent group behind four specialist divisions — care and support, healthcare staffing, security and commercial cleaning. Choose the service you need.",
         "schema_type": null,
         "focus_keyword": "vigil services ltd"
     },
@@ -40,21 +40,52 @@
             "type": "hero",
             "fields": {
                 "heading": "Vigil Services Ltd",
-                "sub": "Specialist London divisions for home care, healthcare staffing, security and commercial cleaning — choose the service you need from the menu above."
+                "sub": "Four specialist divisions providing care, healthcare staffing, security and commercial cleaning. Choose the service you need."
             }
         },
         {
-            "id": "home-intro",
-            "type": "prose",
+            "id": "home-gateway",
+            "type": "division_gateway",
             "fields": {
-                "body": "Vigil Services Ltd is the parent group behind Vigil's specialist divisions across London: home care, healthcare staffing, security and commercial cleaning. Each division runs its own dedicated site — use the navigation to go straight to the service you're looking for."
+                "heading": "Our divisions",
+                "items": [
+                    {
+                        "title": "Care Services",
+                        "body": "Non-clinical care and support for individuals at home — companionship, home help and respite.",
+                        "href": "https://care.vigilservices.co.uk/"
+                    },
+                    {
+                        "title": "Care Staffing",
+                        "body": "Temporary and permanent care staff supplied to care homes and providers.",
+                        "href": "https://staffing.vigilservices.co.uk/"
+                    },
+                    {
+                        "title": "Security Services",
+                        "body": "Manned guarding, mobile patrols and event security.",
+                        "href": "https://security.vigilservices.co.uk/"
+                    },
+                    {
+                        "title": "Cleaning Services",
+                        "body": "Commercial cleaning for offices, construction and healthcare settings.",
+                        "href": "https://cleaning.vigilservices.co.uk/"
+                    }
+                ]
             }
         },
         {
             "id": "home-identity",
             "type": "prose",
             "fields": {
-                "body": "Vigil Services Ltd is registered in England and Wales, company registration 11756806, at Ferguson House, 113 Cranbrook Road, Ilford IG1 4PU. For general enquiries, email info@vigilservices.co.uk."
+                "body": "Vigil Services Ltd is registered in England and Wales, company number 11756806, at Ferguson House, 113 Cranbrook Road, Ilford IG1 4PU."
+            }
+        },
+        {
+            "id": "home-contact",
+            "type": "contact_block",
+            "fields": {
+                "heading": "Contact us",
+                "heading_sub": "For general enquiries, email us. For a specific service, choose a division above.",
+                "surface": "alt"
             }
         }
     ]

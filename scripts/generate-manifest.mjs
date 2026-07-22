@@ -54,8 +54,12 @@ const DIVISION_HOSTS = {
 };
 const APPROVED_EXTERNAL = new Set(['app.vigilservices.co.uk', 'res.cloudinary.com']);
 
-/** Divisions the founder has NOT approved for public listing — gate MAIN-G6. */
-const DEFERRED_DIVISIONS = new Set(['care', 'staffing']);
+/** MAIN-G6 (division public-listing gate) — RESOLVED 2026-07-22 (D-101): the founder approved public
+ *  listing of ALL FOUR divisions on the corporate homepage (Cleaning, Security, Care Services, Care
+ *  Staffing). No division is deferred any longer. Kept as an (empty) set so re-gating is a one-line
+ *  change if the founder ever reverses. D-101 approves the LISTING/gateway link only — not a full
+ *  Care/Staffing corporate overview page. */
+const DEFERRED_DIVISIONS = new Set([]);
 
 function hostOf(url) {
   try {

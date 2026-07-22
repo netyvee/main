@@ -14,7 +14,7 @@
     "test:navrel": "node scripts/nav-rel-roundtrip.mjs"
   },
   "dependencies": {
-    "@vigil/web-framework": "github:netyvee/web-framework#v0.6.0",
+    "@vigil/web-framework": "github:netyvee/web-framework#v0.6.2",
     "next": "14.2.35",
     "react": "^18",
     "react-dom": "^18"
