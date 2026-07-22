@@ -1,0 +1,61 @@
+{
+    "schema_version": 1,
+    "site": "main",
+    "slug": "",
+    "page_type": "supporting",
+    "seo": {
+        "title": "Vigil Services Ltd — London care, staffing, security & cleaning",
+        "noindex": true,
+        "canonical": "/",
+        "description": "Vigil Services Ltd is the parent group behind Vigil's London home care, healthcare staffing, security and commercial cleaning divisions. Choose the service you need from the menu.",
+        "schema_type": null,
+        "focus_keyword": "vigil services ltd"
+    },
+    "brand": {
+        "bg": "#0a1628",
+        "text": "#ffffff",
+        "cta": "#4ecdc4",
+        "secondary": "#7fb2d4"
+    },
+    "site_settings": {
+        "logo": [],
+        "favicon": null,
+        "og": [],
+        "social": [],
+        "analytics": [],
+        "seo_defaults": [],
+        "nav": [],
+        "footer": []
+    },
+    "nap": {
+        "phone": "",
+        "email": "info@vigilservices.co.uk",
+        "address": "Ferguson House, 113 Cranbrook Road, Ilford IG1 4PU",
+        "trading_name": "Vigil Services Ltd",
+        "enquiry_url": ""
+    },
+    "sections": [
+        {
+            "id": "home-hero",
+            "type": "hero",
+            "fields": {
+                "heading": "Vigil Services Ltd",
+                "sub": "Specialist London divisions for home care, healthcare staffing, security and commercial cleaning — choose the service you need from the menu above."
+            }
+        },
+        {
+            "id": "home-intro",
+            "type": "prose",
+            "fields": {
+                "body": "Vigil Services Ltd is the parent group behind Vigil's specialist divisions across London: home care, healthcare staffing, security and commercial cleaning. Each division runs its own dedicated site — use the navigation to go straight to the service you're looking for."
+            }
+        },
+        {
+            "id": "home-identity",
+            "type": "prose",
+            "fields": {
+                "body": "Vigil Services Ltd is registered in England and Wales, company registration 11756806, at Ferguson House, 113 Cranbrook Road, Ilford IG1 4PU. For general enquiries, email info@vigilservices.co.uk."
+            }
+        }
+    ]
+}

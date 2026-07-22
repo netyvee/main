@@ -8,6 +8,14 @@
   "verification_note": "This manifest declares intent from a commit. It is NOT network verification (SG-02 Tier 2) and NOT rendered verification (SG-02 Tier 3). A consumer must re-validate every claimed classification against the CRM SiteRegistry.",
   "routes": [
     {
+      "route": "/",
+      "canonical_url": "https://vigilservices.co.uk/",
+      "indexability_expectation": "noindex",
+      "publication_status": "unknown",
+      "content_source": "content/pages/index.json",
+      "outbound_links": []
+    },
+    {
       "route": "/pilot-render-check",
       "canonical_url": "https://vigilservices.co.uk/pilot-render-check",
       "indexability_expectation": "noindex",
@@ -184,7 +192,7 @@
     }
   ],
   "unresolved_dynamic_links": [],
-  "commit_sha": "0bc1623bd73dcaa36f144c17e53aa65c23f4c266",
-  "generated_at": "2026-07-20T12:43:41.022Z",
-  "content_hash": "4b70a84d04cc03636922891a6114b178bb99b1cbc5ff86a5fb5cd036128bbb62"
+  "commit_sha": "b3c08b69ecc9fba2a3cf982d62e38275c8f9e419",
+  "generated_at": "2026-07-22T12:22:09.532Z",
+  "content_hash": "aa44966ce65090d5a2baef1239da32a38b098b50a5b718410186fe36c9fd086a"
 }
