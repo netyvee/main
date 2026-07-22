@@ -196,3 +196,34 @@ jobs:
         # until cutover. deploy-verify.mjs rejects an SSO page rather than grepping it,
         # so this is recorded as a known limit, not quietly skipped. Add --url/--marker
         # at cutover, when a public URL exists.
+
+      - name: Deployment provenance evidence (MAIN-PROVENANCE-01)
+        # The AUTHORITATIVE deployed-commit binding. The manifest's own `commit_sha` is
+        # generation-base provenance and may lag a manifest committed alongside content —
+        # it must NOT be treated as the deployed-commit authority. This step binds, at
+        # deploy time and non-recursively (nothing is written back into the tree), the
+        # manifest CONTENT (content_hash) to the ACTUAL deployed commit (github.sha) and
+        # the Vercel deployment id/sha from the deployments API. Deterministic; recorded
+        # to the run summary. The app-side Deployment record (RecordDeployment) is the
+        # durable store of the same binding.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          CH=$(node -e "process.stdout.write(String(require('./site-manifest.json').content_hash||''))")
+          MSHA=$(node -e "process.stdout.write(String(require('./site-manifest.json').commit_sha||''))")
+          DEP=$(gh api "repos/${{ github.repository }}/deployments?sha=${{ github.sha }}&environment=Production&per_page=1" --jq '.[0].id // empty' || true)
+          DSHA=$(gh api "repos/${{ github.repository }}/deployments/${DEP:-0}" --jq '.sha // empty' 2>/dev/null || true)
+          {
+            echo "### Deployment provenance (MAIN-PROVENANCE-01)"
+            echo ""
+            echo "| field | value |"
+            echo "|---|---|"
+            echo "| manifest content_hash (authoritative content identity) | \`${CH}\` |"
+            echo "| **deployed commit (github.sha)** | \`${{ github.sha }}\` |"
+            echo "| vercel deployment id | \`${DEP:-none}\` |"
+            echo "| vercel deployment sha | \`${DSHA:-n/a}\` |"
+            echo "| manifest.commit_sha (generation-base only — may lag) | \`${MSHA}\` |"
+            echo "| workflow run | ${{ github.run_id }} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "provenance-bound: content_hash=${CH} deployed=${{ github.sha }} deployment=${DEP:-none}"

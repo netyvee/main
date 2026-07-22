@@ -337,6 +337,12 @@ function build() {
 
   return {
     ...body,
+    // MAIN-PROVENANCE-01: `commit_sha` is GENERATION-BASE provenance only. A manifest generated locally
+    // and committed ALONGSIDE its content records HEAD-before-commit, so it lags the commit it actually
+    // ships in. It must NOT be treated as the deployed-commit authority. The authoritative deployed-commit
+    // binding is emitted at deploy time by qa.yml's "Deployment provenance evidence" step (content_hash +
+    // github.sha + Vercel deployment id) and stored durably by the app-side Deployment record. `content_hash`
+    // (below) is the stable content identity and is what manifest:check compares — never commit_sha.
     commit_sha: commitSha(),
     generated_at: new Date().toISOString(),
     content_hash,
