@@ -1,0 +1,24 @@
+{
+    "schema_version": 1,
+    "site": "main",
+    "slug": "cookies",
+    "page_type": "supporting",
+    "seo": {
+        "title": "Cookie Notice — Vigil Services Ltd",
+        "noindex": true,
+        "canonical": "/cookies",
+        "description": "The cookies this Vigil Services Ltd website uses, why, and how to control them. Analytics cookies load only if you accept.",
+        "schema_type": null,
+        "focus_keyword": "cookie notice"
+    },
+    "brand": { "bg": "#0a1628", "text": "#ffffff", "cta": "#4ecdc4", "secondary": "#7fb2d4" },
+    "site_settings": { "logo": [], "favicon": null, "og": [], "social": [], "analytics": [], "seo_defaults": [], "nav": [], "footer": [] },
+    "nap": { "phone": "", "email": "info@vigilservices.co.uk", "address": "Ferguson House, 113 Cranbrook Road, Ilford IG1 4PU", "trading_name": "Vigil Services Ltd", "enquiry_url": "" },
+    "sections": [
+        { "id": "ck-hero", "type": "hero", "fields": { "heading": "Cookie Notice", "sub": "The cookies this website uses and how to control them. Last updated 22 July 2026." } },
+        { "id": "ck-what", "type": "prose", "fields": { "heading": "What cookies are", "body": "Cookies (and similar technologies like local storage) are small files a website can store on your device. Some are essential to make the site work; others are non-essential (such as analytics) and, by law, require your consent before they can be set." } },
+        { "id": "ck-uses", "type": "prose", "fields": { "heading": "Cookies this website uses", "body": "Until you make a choice, this site sets only one essential cookie — our consent record (‘vigil_consent’), which stores only your choice (accepted or rejected) and the date, no personal information, and is kept for up to six months so we do not have to ask every visit. If you accept analytics, Google Analytics 4 sets its measurement cookies (‘_ga’ and ‘_ga_*’) to measure site usage so we can improve the site; these last up to two years (Google’s default). We do not use advertising, marketing, re-targeting or social-media tracking cookies, or any unrelated third-party tracking, and we keep Google’s advertising features (‘Google signals’) switched off." } },
+        { "id": "ck-choice", "type": "prose", "fields": { "heading": "Your choice and control", "body": "On your first visit you will see a banner with Accept and Reject presented equally. Nothing non-essential loads until you choose. Reject (or ignoring the banner) means no analytics and no analytics cookies. Accept means Google Analytics 4 loads and its cookies are set. You can change or withdraw your choice at any time using the ‘Cookie settings’ control; withdrawing stops future analytics. The essential consent record is exempt from consent because it exists only to honour your choice." } },
+        { "id": "ck-third", "type": "prose", "fields": { "heading": "Third parties", "body": "Google Analytics 4 (Google) loads only after you consent; see Google’s own privacy and cookie information. No other third-party cookies are set by this site. For how we handle personal data and your rights, see our Privacy Notice, including how to complain to the ICO at ico.org.uk." } }
+    ]
+}

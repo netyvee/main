@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { DM_Sans, Playfair_Display } from 'next/font/google';
+import { CookieConsent } from '@vigil/web-framework';
 import './globals.css';
 
 const dmSans = DM_Sans({ subsets: ['latin'], weight: ['300', '400', '500'], display: 'swap', variable: '--font-dm-sans' });
@@ -17,7 +18,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       {/* vf-typography = opt-in shared type scale (framework tokens.css).
           Shared navy/teal palette — main is the brand front door, so it carries the
           estate palette rather than a distinct corporate one (DESIGN-SYSTEM.md). */}
-      <body className="vf-typography" style={{ background: '#0a1628', color: '#ffffff' }}>{children}</body>
+      <body className="vf-typography" style={{ background: '#0a1628', color: '#ffffff' }}>
+        {children}
+        {/* MAIN-COOKIE-CONSENT-01 / MAIN-ANALYTICS-01 (D-103): GA4 G-KTH8TMCHTT loads ONLY after Accept. */}
+        <CookieConsent measurementId="G-KTH8TMCHTT" cookiePolicyHref="/cookies" />
+      </body>
     </html>
   );
 }

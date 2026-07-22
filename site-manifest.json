@@ -3,10 +3,18 @@
   "site": "main",
   "domain": "https://vigilservices.co.uk",
   "repository": "netyvee/main",
-  "framework_pin": "github:netyvee/web-framework#v0.6.2",
+  "framework_pin": "github:netyvee/web-framework#v0.6.4",
   "declaration_only": true,
   "verification_note": "This manifest declares intent from a commit. It is NOT network verification (SG-02 Tier 2) and NOT rendered verification (SG-02 Tier 3). A consumer must re-validate every claimed classification against the CRM SiteRegistry.",
   "routes": [
+    {
+      "route": "/cookies",
+      "canonical_url": "https://vigilservices.co.uk/cookies",
+      "indexability_expectation": "noindex",
+      "publication_status": "unknown",
+      "content_source": "content/pages/cookies.json",
+      "outbound_links": []
+    },
     {
       "route": "/",
       "canonical_url": "https://vigilservices.co.uk/",
@@ -62,6 +70,14 @@
       "indexability_expectation": "noindex",
       "publication_status": "approved",
       "content_source": "content/pages/pilot-render-check.json",
+      "outbound_links": []
+    },
+    {
+      "route": "/privacy",
+      "canonical_url": "https://vigilservices.co.uk/privacy",
+      "indexability_expectation": "noindex",
+      "publication_status": "unknown",
+      "content_source": "content/pages/privacy.json",
       "outbound_links": []
     }
   ],
@@ -191,7 +207,7 @@
     {
       "href": "https://vigilservices.co.uk",
       "source_file": "app/layout.tsx",
-      "source_line": 9,
+      "source_line": 10,
       "destination_host": "vigilservices.co.uk",
       "destination_classification": "corporate"
     },
@@ -225,7 +241,7 @@
     }
   ],
   "unresolved_dynamic_links": [],
-  "commit_sha": "4f0f117b9f86852f9325279d83d46373b8020a86",
-  "generated_at": "2026-07-22T14:13:49.810Z",
-  "content_hash": "3564b46877199ca29770d1c3414500ce9e61fd4288a58c75adda9e43e50a63bf"
+  "commit_sha": "c62faa0ae118cb4ba4caf82bb92b131537a9b07a",
+  "generated_at": "2026-07-22T17:31:00.207Z",
+  "content_hash": "8c8b28a5b5d9ecc2d5c30e03af9839a98bfaf64e6a8d7adad1ae4ab9de7191cb"
 }

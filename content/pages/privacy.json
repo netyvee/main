@@ -1,0 +1,27 @@
+{
+    "schema_version": 1,
+    "site": "main",
+    "slug": "privacy",
+    "page_type": "supporting",
+    "seo": {
+        "title": "Privacy Notice — Vigil Services Ltd",
+        "noindex": true,
+        "canonical": "/privacy",
+        "description": "How Vigil Services Ltd handles personal data on this corporate website: what we collect, why, who we share it with, your rights, and how to complain.",
+        "schema_type": null,
+        "focus_keyword": "privacy notice"
+    },
+    "brand": { "bg": "#0a1628", "text": "#ffffff", "cta": "#4ecdc4", "secondary": "#7fb2d4" },
+    "site_settings": { "logo": [], "favicon": null, "og": [], "social": [], "analytics": [], "seo_defaults": [], "nav": [], "footer": [] },
+    "nap": { "phone": "", "email": "info@vigilservices.co.uk", "address": "Ferguson House, 113 Cranbrook Road, Ilford IG1 4PU", "trading_name": "Vigil Services Ltd", "enquiry_url": "" },
+    "sections": [
+        { "id": "priv-hero", "type": "hero", "fields": { "heading": "Privacy Notice", "sub": "How Vigil Services Ltd handles personal data on this website. Last updated 22 July 2026." } },
+        { "id": "priv-who", "type": "prose", "fields": { "heading": "Who we are", "body": "Vigil Services Ltd (“we”, “us”) is the data controller for this website (vigilservices.co.uk). We are registered in England and Wales, company number 11756806, registered office Ferguson House, 113 Cranbrook Road, Ilford IG1 4PU. For any privacy matter, email info@vigilservices.co.uk." } },
+        { "id": "priv-site", "type": "prose", "fields": { "heading": "About this website", "body": "This is a corporate gateway site: it presents Vigil Services Ltd and links to our four separate division websites (Vigil Cleaning Services, Vigil Security Services, Vigil Care Services and Vigil Care Staffing). This site has no forms, no accounts and no candidate or reference forms. To contact us you email info@vigilservices.co.uk; to use a service you follow the link to that division’s own website, which has its own privacy notice and is responsible for the data it collects." } },
+        { "id": "priv-collect", "type": "prose", "fields": { "heading": "What we collect and why", "body": "When you email us, we process your email address, name and the content of your message, only to respond to your enquiry (lawful basis: our legitimate interest in responding, or steps prior to a contract), and we keep it only as long as necessary to handle the enquiry and any follow-up, then delete it. Our hosting provider processes standard technical data (such as IP address, request time and browser type) to deliver and secure the site (lawful basis: legitimate interests), retained per the provider’s standard log retention. Analytics runs only if you consent: no analytics is collected until you actively accept in our cookie banner; if you reject or ignore it, none is collected (lawful basis: consent, which you can withdraw at any time via ‘Cookie settings’). We do not collect special-category data, run advertising tracking, or ask you to create an account." } },
+        { "id": "priv-share", "type": "prose", "fields": { "heading": "Who we share it with", "body": "We use Vercel for website hosting/CDN (technical and log data), Krystal for our email and DNS, and Google for Google Analytics 4 (only after you consent). Our division websites are separate controllers for anything you do on them. We do not sell your personal data. Where a processor is outside the UK, we rely on appropriate transfer safeguards, such as the UK International Data Transfer Agreement or the EU Standard Contractual Clauses with the UK Addendum." } },
+        { "id": "priv-rights", "type": "prose", "fields": { "heading": "Your rights", "body": "Under UK GDPR you can ask us to access, correct, erase, restrict, object to or port your personal data, and (where we rely on consent) withdraw consent at any time. To exercise any right, email info@vigilservices.co.uk." } },
+        { "id": "priv-complaints", "type": "prose", "fields": { "heading": "Complaints", "body": "If you are unhappy with how we handle your data, please contact us first at info@vigilservices.co.uk. You also have the right to complain to the Information Commissioner’s Office (ICO) at ico.org.uk or on 0303 123 1113." } },
+        { "id": "priv-cookies", "type": "prose", "fields": { "heading": "Cookies", "body": "See our Cookie Notice. In summary, this site sets no non-essential cookies without your consent; analytics cookies load only if you accept. We may update this notice; the ‘last updated’ date above shows the current version." } }
+    ]
+}

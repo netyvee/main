@@ -32,4 +32,11 @@ const nextConfig = {
 // withVigilSecurity() applies the shared CSP/HSTS/frame/nosniff header set (framework
 // v0.4.7+). care has to inline 55 lines of this because its pin predates the helper —
 // scaffolding at v0.4.10 means this site never inherits that debt.
-export default withVigilSecurity(nextConfig);
+// MAIN-ANALYTICS-01 (D-103): allow consent-gated GA4 (G-KTH8TMCHTT) in the CSP. GA4 still loads ONLY after
+// an active Accept (the CookieConsent gate) — the CSP merely PERMITS it; it does not load it. Scoped to
+// script-src (gtag.js) + connect-src/img-src (collect endpoints) so nothing else is widened.
+export default withVigilSecurity(nextConfig, {
+  scriptHosts: ['https://www.googletagmanager.com'],
+  connectHosts: ['https://www.google-analytics.com', 'https://region1.google-analytics.com'],
+  imgHosts: ['https://www.google-analytics.com'],
+});

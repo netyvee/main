@@ -43,12 +43,15 @@ export const siteNav: SiteNav = {
       ],
     },
   ],
-  // legalLinks intentionally omitted, and this is a RECORDED GAP, not an oversight.
-  // The live corporate site has NO legal pages of its own: its footer links to
-  // privacy / modern-slavery / equal-opportunities pages hosted on the STAFFING
-  // subdomain, and there is no terms-of-service and no cookie policy anywhere in
-  // the estate. Pointing the corporate footer at a division's legal pages is a
-  // content/legal decision, not an engineering one (gate MAIN-G5).
+  // MAIN-G5 (2026-07-22): main now has its OWN legal pages — a founder-approved privacy notice
+  // and cookie notice (D-102 re-scope: privacy + cookie are the required set; modern-slavery is not
+  // statutorily required at < £36m turnover; terms/accessibility are recommended, not blockers). The
+  // footer links to main's own pages, NOT the staffing subdomain's. Modern-slavery/equal-opportunities
+  // remain division-owned. Terms/accessibility can be added later without blocking cutover.
+  legalLinks: [
+    { label: 'Privacy', href: '/privacy' },
+    { label: 'Cookies', href: '/cookies' },
+  ],
   companyReg: 'Company Reg. 11756806',
   // No enquiry CTA label: `main.enquiry_url` is deliberately empty after closing
   // C-12 (it used to funnel the whole group into /enquire/cleaning). What replaces
