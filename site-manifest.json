@@ -30,7 +30,11 @@
           "source_file": "content/pages/index.json",
           "source_line": null,
           "origin": "crm_published",
-          "rel": null
+          "rel": null,
+          "destination_host": "care.vigilservices.co.uk",
+          "destination_classification": "division",
+          "division": "care",
+          "relationship_type": "corporate_to_division"
         },
         {
           "href": "https://staffing.vigilservices.co.uk/",
@@ -40,7 +44,11 @@
           "source_file": "content/pages/index.json",
           "source_line": null,
           "origin": "crm_published",
-          "rel": null
+          "rel": null,
+          "destination_host": "staffing.vigilservices.co.uk",
+          "destination_classification": "division",
+          "division": "staffing",
+          "relationship_type": "corporate_to_division"
         },
         {
           "href": "https://security.vigilservices.co.uk/",
@@ -50,7 +58,11 @@
           "source_file": "content/pages/index.json",
           "source_line": null,
           "origin": "crm_published",
-          "rel": null
+          "rel": null,
+          "destination_host": "security.vigilservices.co.uk",
+          "destination_classification": "division",
+          "division": "security",
+          "relationship_type": "corporate_to_division"
         },
         {
           "href": "https://cleaning.vigilservices.co.uk/",
@@ -60,7 +72,11 @@
           "source_file": "content/pages/index.json",
           "source_line": null,
           "origin": "crm_published",
-          "rel": null
+          "rel": null,
+          "destination_host": "cleaning.vigilservices.co.uk",
+          "destination_classification": "division",
+          "division": "cleaning",
+          "relationship_type": "corporate_to_division"
         }
       ]
     },
@@ -181,7 +197,7 @@
     }
   ],
   "unresolved_dynamic_links": [],
-  "commit_sha": "f52a0ee0b3ee5249001261b43f7d66dba976ceef",
-  "generated_at": "2026-07-22T21:21:20.310Z",
-  "content_hash": "18b4b19c0baedddb145f8d762aa4781a86311491fc56be717e7ff14b587624dc"
+  "commit_sha": "cde3e95d7b70d697726f74feec0012922de46786",
+  "generated_at": "2026-07-22T21:25:06.744Z",
+  "content_hash": "2476b6a4bf139d302499e9d8660a17427ee34e8a882d16429e9c7948f3961692"
 }

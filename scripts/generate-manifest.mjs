@@ -286,7 +286,14 @@ function frameworkPin() {
 
 function build() {
   const sitewide = [...discoverNavAndFooter()];
-  const contentLinks = discoverContentLinks();
+  // Classify page-content links too (v0.6.6 / MAIN-HOMEPAGE-VISUAL-02): the division links moved from
+  // the header nav into the on-page image gateway (division_image_gateway), so page_content is now the
+  // PRIMARY division-link surface. Classifying + validating them here (not just sitewide) keeps every
+  // division link — wherever it renders — under the same D-033/D-095 governance.
+  const contentLinks = discoverContentLinks().map((l) => {
+    const cls = classify(l.href);
+    return { ...l, ...cls, relationship_type: relationshipFor(cls) };
+  });
   const { declarations, unresolved } = discoverAppSources();
   const routes = discoverRoutes(contentLinks);
 
@@ -356,16 +363,23 @@ function build() {
 function validate(manifest) {
   const errors = [];
 
-  for (const l of manifest.sitewide_outbound_links) {
+  // Every absolute link — sitewide chrome AND page content (the image gateway) — is held to the same
+  // rules. Page_content is validated too so a bad host in a gateway card fails the gate exactly as a
+  // bad footer host would (the image gateway is the primary division surface since v0.6.6).
+  const pageLinks = (manifest.routes ?? []).flatMap((r) => (r.outbound_links ?? []).map((l) => ({ ...l, route: r.route })));
+  const all = [...manifest.sitewide_outbound_links, ...pageLinks];
+
+  for (const l of all) {
+    const where = `${l.source_file}${l.source_line ? ':' + l.source_line : l.route ? ' (' + l.route + ')' : ''}`;
     if (l.destination_classification === 'unclassified') {
-      errors.push(`UNCLASSIFIED destination ${l.destination_host} (${l.source_file}:${l.source_line}). ` +
+      errors.push(`UNCLASSIFIED destination ${l.destination_host} (${where}). ` +
         'Every absolute link must resolve to a known host.');
     }
     if (l.destination_classification === 'malformed') {
-      errors.push(`MALFORMED URL "${l.href}" (${l.source_file}:${l.source_line}).`);
+      errors.push(`MALFORMED URL "${l.href}" (${where}).`);
     }
     if (!l.relationship_type) {
-      errors.push(`MISSING relationship for ${l.href} (${l.source_file}:${l.source_line}).`);
+      errors.push(`MISSING relationship for ${l.href} (${where}).`);
     }
     // Cannot occur from this repository — main is the corporate apex, not a division —
     // but asserted so a future refactor that changed that assumption fails loudly.
