@@ -15,6 +15,10 @@ const nextConfig = {
   // corporate site matches its own subdomains rather than preserving a convention
   // that only the outgoing WordPress install used.
   trailingSlash: false,
+  // Next's automatic trailing-slash redirect is disabled so middleware.ts can handle the legacy
+  // slashed WordPress URLs in a SINGLE hop (no 308-then-301 chain). middleware re-implements the
+  // normalisation (any /path/ -> /path, 308) for every other path.
+  skipTrailingSlashRedirect: true,
 
   images: {
     remotePatterns: [

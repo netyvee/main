@@ -2,11 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "installCommand": "npm ci",
-  "buildCommand": "npm run build",
-  "redirects": [
-    { "source": "/about", "destination": "/", "permanent": true },
-    { "source": "/about/", "destination": "/", "permanent": true },
-    { "source": "/about-vigil-services-ltd", "destination": "/", "permanent": true },
-    { "source": "/about-vigil-services-ltd/", "destination": "/", "permanent": true }
-  ]
+  "buildCommand": "npm run build"
 }
