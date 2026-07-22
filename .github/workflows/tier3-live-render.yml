@@ -1,0 +1,26 @@
+name: SG-02 Tier 3 — live-served render check (Main)
+
+# On-demand rendered verification of a DEPLOYED (protection-gated) Main deployment.
+# Traverses Vercel deployment protection with the Protection-Bypass-for-Automation secret,
+# then asserts the served HTML renders exactly the site-manifest's declared occurrences.
+# D-094 / P4-RENDER-TEST-01: an SSO/login page is UNVERIFIED (exit 2), never a pass.
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "Deployment URL to verify (the protected Vercel deployment for the artefact under test)"
+        required: true
+        type: string
+
+jobs:
+  tier3-live-render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Tier-3 live-served render verification
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: node scripts/tier3-live-render.mjs --url "${{ inputs.url }}"
