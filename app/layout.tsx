@@ -16,9 +16,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-GB" className={`${dmSans.variable} ${playfair.variable}`}>
       {/* vf-typography = opt-in shared type scale (framework tokens.css).
-          Shared navy/teal palette — main is the brand front door, so it carries the
-          estate palette rather than a distinct corporate one (DESIGN-SYSTEM.md). */}
-      <body className="vf-typography" style={{ background: '#0a1628', color: '#ffffff' }}>
+          MAIN-HOMEPAGE-VISUAL-02 (founder-approved reference): the corporate front door is a
+          LIGHT page (white ground, navy text) — navy appears only in the hero band + footer.
+          This overrides the earlier all-navy estate default for main (a founder visual decision);
+          the division sites keep the dark palette. */}
+      <body className="vf-typography" style={{ background: '#ffffff', color: '#0a1628' }}>
         {children}
         {/* MAIN-COOKIE-CONSENT-01 / MAIN-ANALYTICS-01 (D-103): GA4 G-KTH8TMCHTT loads ONLY after Accept. */}
         <CookieConsent measurementId="G-KTH8TMCHTT" cookiePolicyHref="/cookies" />

@@ -12,10 +12,14 @@
         "focus_keyword": "vigil services ltd"
     },
     "brand": {
-        "bg": "#0a1628",
-        "text": "#ffffff",
-        "cta": "#4ecdc4",
-        "secondary": "#7fb2d4"
+        "bg": "#ffffff",
+        "text": "#0a1628",
+        "cta": "#0f7d70",
+        "secondary": "#7fb2d4",
+        "bg_deep": "#10243a",
+        "bg_footer": "#0a1628",
+        "on_footer": "#ffffff",
+        "line": "rgba(10,22,40,0.10)"
     },
     "site_settings": {
         "logo": [],
@@ -37,78 +41,51 @@
     "sections": [
         {
             "id": "home-hero",
-            "type": "division_visual_hero",
+            "type": "corporate_hero",
             "fields": {
                 "heading": "Vigil Services Ltd",
-                "sub": "Four specialist divisions providing care, healthcare staffing, security and commercial cleaning. Choose the service you need.",
-                "_note": "Four fixed division image slots (order + set are governed by the framework). State A: no image url -> polished placeholder. State B: add a url to a division's image to replace that slot only. image_alt describes the intended founder-approved subject; it becomes the alt text when a real image lands.",
-                "images": [
-                    {
-                        "division": "care_services",
-                        "image": null,
-                        "image_alt": "A care worker in a white tunic with navy neckline and sleeve trim offering companionship and home support to an individual — dignified and non-clinical."
-                    },
-                    {
-                        "division": "care_staffing",
-                        "image": null,
-                        "image_alt": "Care professionals in white tunics with navy trim in a care-home or provider setting, representing staff supplied to organisations."
-                    },
-                    {
-                        "division": "security_services",
-                        "image": null,
-                        "image_alt": "A professional security officer in a calm, trustworthy posture in a commercial setting — no weapons or militarised presentation."
-                    },
-                    {
-                        "division": "cleaning_services",
-                        "image": null,
-                        "image_alt": "A commercial cleaning professional with modern equipment in a credible workplace environment."
-                    }
-                ]
+                "sub": "Four specialist divisions providing care, healthcare staffing, security and commercial cleaning. Choose the service you need."
             }
         },
         {
-            "id": "home-gateway",
-            "type": "division_gateway",
+            "id": "home-divisions",
+            "type": "division_image_gateway",
             "fields": {
-                "heading": "Our divisions",
+                "_note": "Four governed image-led columns. Order + approved hosts are enforced by the framework. Each image sits directly above its own title + Explore-more link (founder amendment). Images are provisional crops derived from the founder reference; replace the url per division with a licensed production asset before cutover.",
                 "items": [
                     {
                         "title": "Care Services",
-                        "body": "Non-clinical care and support for individuals at home — companionship, home help and respite.",
-                        "href": "https://care.vigilservices.co.uk/"
+                        "image": { "url": "/images/divisions/care-services.jpg", "alt": "A Vigil care worker in a white tunic with navy neckline trim, offering warm, dignified non-clinical support." },
+                        "href": "https://care.vigilservices.co.uk/",
+                        "cta_label": "Explore more"
                     },
                     {
                         "title": "Care Staffing",
-                        "body": "Temporary and permanent care staff supplied to care homes and providers.",
-                        "href": "https://staffing.vigilservices.co.uk/"
+                        "image": { "url": "/images/divisions/care-staffing.jpg", "alt": "A Vigil care professional in a white tunic with navy trim in a provider setting, representing care staff supplied to organisations." },
+                        "href": "https://staffing.vigilservices.co.uk/",
+                        "cta_label": "Explore more"
                     },
                     {
                         "title": "Security Services",
-                        "body": "Manned guarding, mobile patrols and event security.",
-                        "href": "https://security.vigilservices.co.uk/"
+                        "image": { "url": "/images/divisions/security-services.jpg", "alt": "A professional Vigil security officer in a calm, trustworthy posture in a commercial setting." },
+                        "href": "https://security.vigilservices.co.uk/",
+                        "cta_label": "Explore more"
                     },
                     {
                         "title": "Cleaning Services",
-                        "body": "Commercial cleaning for offices, construction and healthcare settings.",
-                        "href": "https://cleaning.vigilservices.co.uk/"
+                        "image": { "url": "/images/divisions/cleaning-services.jpg", "alt": "A Vigil commercial cleaning professional in a modern workplace environment." },
+                        "href": "https://cleaning.vigilservices.co.uk/",
+                        "cta_label": "Explore more"
                     }
                 ]
             }
         },
         {
-            "id": "home-identity",
-            "type": "prose",
+            "id": "home-reassurance",
+            "type": "reassurance_strip",
             "fields": {
-                "body": "Vigil Services Ltd is registered in England and Wales, company number 11756806, at Ferguson House, 113 Cranbrook Road, Ilford IG1 4PU."
-            }
-        },
-        {
-            "id": "home-contact",
-            "type": "contact_block",
-            "fields": {
-                "heading": "Contact us",
-                "heading_sub": "For general enquiries, email us. For a specific service, choose a division above.",
-                "surface": "alt"
+                "statement": "At Vigil Services Ltd, we combine skilled people with high standards to deliver peace of mind.",
+                "action_label": "Get in touch"
             }
         }
     ]

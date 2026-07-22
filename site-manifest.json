@@ -3,7 +3,7 @@
   "site": "main",
   "domain": "https://vigilservices.co.uk",
   "repository": "netyvee/main",
-  "framework_pin": "github:netyvee/web-framework#v0.6.5",
+  "framework_pin": "github:netyvee/web-framework#v0.6.7",
   "declaration_only": true,
   "verification_note": "This manifest declares intent from a commit. It is NOT network verification (SG-02 Tier 2) and NOT rendered verification (SG-02 Tier 3). A consumer must re-validate every claimed classification against the CRM SiteRegistry.",
   "routes": [
@@ -24,43 +24,59 @@
       "outbound_links": [
         {
           "href": "https://care.vigilservices.co.uk/",
-          "anchor_text": "",
+          "anchor_text": "Explore more",
           "placement": "page_content",
           "scope": "page_specific",
           "source_file": "content/pages/index.json",
           "source_line": null,
           "origin": "crm_published",
-          "rel": null
+          "rel": null,
+          "destination_host": "care.vigilservices.co.uk",
+          "destination_classification": "division",
+          "division": "care",
+          "relationship_type": "corporate_to_division"
         },
         {
           "href": "https://staffing.vigilservices.co.uk/",
-          "anchor_text": "",
+          "anchor_text": "Explore more",
           "placement": "page_content",
           "scope": "page_specific",
           "source_file": "content/pages/index.json",
           "source_line": null,
           "origin": "crm_published",
-          "rel": null
+          "rel": null,
+          "destination_host": "staffing.vigilservices.co.uk",
+          "destination_classification": "division",
+          "division": "staffing",
+          "relationship_type": "corporate_to_division"
         },
         {
           "href": "https://security.vigilservices.co.uk/",
-          "anchor_text": "",
+          "anchor_text": "Explore more",
           "placement": "page_content",
           "scope": "page_specific",
           "source_file": "content/pages/index.json",
           "source_line": null,
           "origin": "crm_published",
-          "rel": null
+          "rel": null,
+          "destination_host": "security.vigilservices.co.uk",
+          "destination_classification": "division",
+          "division": "security",
+          "relationship_type": "corporate_to_division"
         },
         {
           "href": "https://cleaning.vigilservices.co.uk/",
-          "anchor_text": "",
+          "anchor_text": "Explore more",
           "placement": "page_content",
           "scope": "page_specific",
           "source_file": "content/pages/index.json",
           "source_line": null,
           "origin": "crm_published",
-          "rel": null
+          "rel": null,
+          "destination_host": "cleaning.vigilservices.co.uk",
+          "destination_classification": "division",
+          "division": "cleaning",
+          "relationship_type": "corporate_to_division"
         }
       ]
     },
@@ -84,78 +100,18 @@
   "sitewide_outbound_links": [
     {
       "href": "https://cleaning.vigilservices.co.uk/",
-      "anchor_text": "Cleaning",
-      "placement": "header_nav",
-      "scope": "sitewide",
-      "source_file": "config/site.ts",
-      "source_line": 30,
-      "origin": "hard_coded",
-      "rel": null,
-      "destination_host": "cleaning.vigilservices.co.uk",
-      "destination_classification": "division",
-      "division": "cleaning",
-      "relationship_type": "corporate_to_division",
-      "duplicate_occurrences": 2
-    },
-    {
-      "href": "https://security.vigilservices.co.uk/",
-      "anchor_text": "Security",
-      "placement": "header_nav",
-      "scope": "sitewide",
-      "source_file": "config/site.ts",
-      "source_line": 31,
-      "origin": "hard_coded",
-      "rel": null,
-      "destination_host": "security.vigilservices.co.uk",
-      "destination_classification": "division",
-      "division": "security",
-      "relationship_type": "corporate_to_division",
-      "duplicate_occurrences": 2
-    },
-    {
-      "href": "https://care.vigilservices.co.uk/",
-      "anchor_text": "Care",
-      "placement": "header_nav",
-      "scope": "sitewide",
-      "source_file": "config/site.ts",
-      "source_line": 32,
-      "origin": "hard_coded",
-      "rel": null,
-      "destination_host": "care.vigilservices.co.uk",
-      "destination_classification": "division",
-      "division": "care",
-      "relationship_type": "corporate_to_division",
-      "duplicate_occurrences": 2
-    },
-    {
-      "href": "https://staffing.vigilservices.co.uk/",
-      "anchor_text": "Staffing",
-      "placement": "header_nav",
-      "scope": "sitewide",
-      "source_file": "config/site.ts",
-      "source_line": 33,
-      "origin": "hard_coded",
-      "rel": null,
-      "destination_host": "staffing.vigilservices.co.uk",
-      "destination_classification": "division",
-      "division": "staffing",
-      "relationship_type": "corporate_to_division",
-      "duplicate_occurrences": 2
-    },
-    {
-      "href": "https://cleaning.vigilservices.co.uk/",
       "anchor_text": "Vigil Cleaning Services",
       "placement": "footer",
       "scope": "sitewide",
       "source_file": "config/site.ts",
-      "source_line": 39,
+      "source_line": 46,
       "origin": "hard_coded",
       "rel": null,
       "destination_host": "cleaning.vigilservices.co.uk",
       "destination_classification": "division",
       "division": "cleaning",
       "relationship_type": "corporate_to_division",
-      "duplicate_occurrences": 2
+      "duplicate_occurrences": 1
     },
     {
       "href": "https://security.vigilservices.co.uk/",
@@ -163,14 +119,14 @@
       "placement": "footer",
       "scope": "sitewide",
       "source_file": "config/site.ts",
-      "source_line": 40,
+      "source_line": 47,
       "origin": "hard_coded",
       "rel": null,
       "destination_host": "security.vigilservices.co.uk",
       "destination_classification": "division",
       "division": "security",
       "relationship_type": "corporate_to_division",
-      "duplicate_occurrences": 2
+      "duplicate_occurrences": 1
     },
     {
       "href": "https://care.vigilservices.co.uk/",
@@ -178,14 +134,14 @@
       "placement": "footer",
       "scope": "sitewide",
       "source_file": "config/site.ts",
-      "source_line": 41,
+      "source_line": 48,
       "origin": "hard_coded",
       "rel": null,
       "destination_host": "care.vigilservices.co.uk",
       "destination_classification": "division",
       "division": "care",
       "relationship_type": "corporate_to_division",
-      "duplicate_occurrences": 2
+      "duplicate_occurrences": 1
     },
     {
       "href": "https://staffing.vigilservices.co.uk/",
@@ -193,14 +149,14 @@
       "placement": "footer",
       "scope": "sitewide",
       "source_file": "config/site.ts",
-      "source_line": 42,
+      "source_line": 49,
       "origin": "hard_coded",
       "rel": null,
       "destination_host": "staffing.vigilservices.co.uk",
       "destination_classification": "division",
       "division": "staffing",
       "relationship_type": "corporate_to_division",
-      "duplicate_occurrences": 2
+      "duplicate_occurrences": 1
     }
   ],
   "site_origin_declarations": [
@@ -241,7 +197,7 @@
     }
   ],
   "unresolved_dynamic_links": [],
-  "commit_sha": "3dec362fdd69159c755223279aeeea87a5f3ff97",
-  "generated_at": "2026-07-22T20:26:34.351Z",
-  "content_hash": "c1ad77e2a6be408157cfc9cb4c4d971ad2c3f875a3a620306812d8903739b3a7"
+  "commit_sha": "cde3e95d7b70d697726f74feec0012922de46786",
+  "generated_at": "2026-07-22T21:25:06.744Z",
+  "content_hash": "2476b6a4bf139d302499e9d8660a17427ee34e8a882d16429e9c7948f3961692"
 }

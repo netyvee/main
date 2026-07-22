@@ -80,10 +80,21 @@ console.log('\nSM-01 — site manifest\n');
 
 const m = generate();
 
+// v0.6.6 / MAIN-HOMEPAGE-VISUAL-02 — division links now render in TWO governed surfaces: the footer
+// (sitewide) and the on-page image gateway (page_content, in routes). Governance is identical in both.
+// These helpers gather across both so the tests assert the whole division-link set, not just the chrome.
+const routeLinks = (m.routes ?? []).flatMap((r) => (r.outbound_links ?? []).map((l) => ({ ...l, route: r.route })));
+const allLinks = [...m.sitewide_outbound_links, ...routeLinks];
+const allDivisionLinks = allLinks.filter((l) => l.destination_classification === 'division');
+
 // 1 + 2. Discovery of the known links.
-check('discovers all eight sitewide absolute links', () => {
-  assert(m.sitewide_outbound_links.length === 8,
-    `expected 8, got ${m.sitewide_outbound_links.length}`);
+check('discovers the four sitewide (footer) absolute links + four gateway links = eight division links', () => {
+  // The header nav no longer carries division links (they are on-page anchors now); the four division
+  // destinations render in the footer (sitewide) and the image gateway (page_content). Both are governed.
+  assert(m.sitewide_outbound_links.length === 4,
+    `expected 4 sitewide (footer) links, got ${m.sitewide_outbound_links.length}`);
+  assert(allDivisionLinks.length === 8,
+    `expected 8 division links across footer+gateway, got ${allDivisionLinks.length}`);
 });
 
 check('discovers the hard-coded anchors with their visible text', () => {
@@ -105,7 +116,7 @@ check('discovers a CRM-published override link and marks its origin', () => {
   const published = out.sitewide_outbound_links.filter((l) => l.origin === 'crm_published');
   assert(published.length === 1, `expected 1 crm_published link, got ${published.length}`);
   const statics = out.sitewide_outbound_links.filter((l) => l.origin === 'static_default_overridden');
-  assert(statics.length === 8, 'static defaults must still be recorded, marked as overridden');
+  assert(statics.length === 4, 'the four static footer defaults must still be recorded, marked as overridden');
 });
 
 // 5 + 6. Placement and scope.
@@ -115,9 +126,13 @@ check('assigns sitewide placement to footer links', () => {
   assert(footer.every((l) => l.scope === 'sitewide'), 'footer links must be sitewide');
 });
 
-check('separates header navigation from footer', () => {
+check('header nav carries no absolute division links (they moved to the on-page gateway)', () => {
+  // The reference header uses on-page anchors (/#divisions, /#contact), not absolute division links, so
+  // no division link appears in header_nav any more. The four divisions live in the gateway route instead.
   const nav = m.sitewide_outbound_links.filter((l) => l.placement === 'header_nav');
-  assert(nav.length === 4, `expected 4 nav links, got ${nav.length}`);
+  assert(nav.length === 0, `expected 0 absolute nav links, got ${nav.length}`);
+  const gateway = routeLinks.filter((l) => l.placement === 'page_content' && l.destination_classification === 'division');
+  assert(gateway.length === 4, `expected 4 gateway division links, got ${gateway.length}`);
 });
 
 check('represents page-specific links per route', () => {
@@ -135,6 +150,15 @@ check('FAILS on an unknown destination host', () => {
         "href: 'https://competitor.example/' }"));
   });
   assert(/UNCLASSIFIED/.test(err), `expected an UNCLASSIFIED failure, got: ${err.slice(0, 200)}`);
+});
+
+check('FAILS on an unknown host in the IMAGE GATEWAY (page content is governed too)', () => {
+  const err = withScratchExpectingFailure((dir) => {
+    const p = path.join(dir, 'content', 'pages', 'index.json');
+    fs.writeFileSync(p, fs.readFileSync(p, 'utf8')
+      .replace('https://care.vigilservices.co.uk/', 'https://competitor.example/'));
+  });
+  assert(/UNCLASSIFIED/.test(err), `expected an UNCLASSIFIED failure from a gateway link, got: ${err.slice(0, 200)}`);
 });
 
 check('FAILS on a malformed absolute URL', () => {
@@ -157,28 +181,31 @@ check('cannot emit a division_to_division relationship from the corporate apex',
 });
 
 // 10. Corporate → division is represented without weakening D-095.
-check('represents corporate_to_division for every division link', () => {
-  const div = m.sitewide_outbound_links.filter((l) => l.destination_classification === 'division');
-  assert(div.length === 8, `expected 8 division links, got ${div.length}`);
-  assert(div.every((l) => l.relationship_type === 'corporate_to_division'),
-    'division links must be corporate_to_division (D-033 clause 4)');
+check('represents corporate_to_division for every division link (footer + gateway)', () => {
+  assert(allDivisionLinks.length === 8, `expected 8 division links, got ${allDivisionLinks.length}`);
+  assert(allDivisionLinks.every((l) => l.relationship_type === 'corporate_to_division'),
+    'division links must be corporate_to_division (D-033 clause 4) — wherever they render');
 });
 
 // 11. MAIN-G6 RESOLVED 2026-07-22 (D-101): all four divisions approved for public listing.
 check('MAIN-G6 resolved (D-101) — no division link remains UNRESOLVED-gated', () => {
-  const stillGated = m.sitewide_outbound_links.filter((l) => l.gate_status === 'UNRESOLVED');
+  const stillGated = allLinks.filter((l) => l.gate_status === 'UNRESOLVED');
   assert(stillGated.length === 0, `MAIN-G6 is resolved; expected 0 UNRESOLVED links, got ${stillGated.length}`);
-  // All four divisions are now listed corporate->division (8 occurrences: 4 nav + 4 footer).
-  const divisions = new Set(m.sitewide_outbound_links.map((l) => l.division));
+  // All four divisions are listed corporate->division (8 occurrences: 4 footer + 4 gateway).
+  const divisions = new Set(allDivisionLinks.map((l) => l.division));
   assert(['cleaning', 'security', 'care', 'staffing'].every((d) => divisions.has(d)),
     'all four divisions must be present as corporate->division links');
 });
 
 // 12. Duplicates.
-check('records duplicate occurrences rather than collapsing them', () => {
-  const cleaning = m.sitewide_outbound_links.filter((l) => l.href.includes('cleaning.'));
-  assert(cleaning.length === 2, 'the same destination in nav and footer is two renderable links');
-  assert(cleaning.every((l) => l.duplicate_occurrences === 2), 'duplicate count must be recorded');
+check('records every renderable occurrence rather than collapsing them', () => {
+  // Cleaning renders twice across the site — once in the footer (sitewide) and once in the gateway
+  // (page_content) — so the manifest must show both occurrences, not one collapsed entry.
+  const cleaning = allLinks.filter((l) => l.href.includes('cleaning.'));
+  assert(cleaning.length === 2, 'cleaning renders in both the footer and the gateway = two renderable links');
+  const placements = new Set(cleaning.map((l) => l.placement));
+  assert(placements.has('footer') && placements.has('page_content'),
+    `expected cleaning in footer + page_content, got ${[...placements].join(', ')}`);
 });
 
 // 13. Dynamic links are surfaced, not silently dropped.
