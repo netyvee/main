@@ -37,10 +37,33 @@
     "sections": [
         {
             "id": "home-hero",
-            "type": "hero",
+            "type": "division_visual_hero",
             "fields": {
                 "heading": "Vigil Services Ltd",
-                "sub": "Four specialist divisions providing care, healthcare staffing, security and commercial cleaning. Choose the service you need."
+                "sub": "Four specialist divisions providing care, healthcare staffing, security and commercial cleaning. Choose the service you need.",
+                "_note": "Four fixed division image slots (order + set are governed by the framework). State A: no image url -> polished placeholder. State B: add a url to a division's image to replace that slot only. image_alt describes the intended founder-approved subject; it becomes the alt text when a real image lands.",
+                "images": [
+                    {
+                        "division": "care_services",
+                        "image": null,
+                        "image_alt": "A care worker in a white tunic with navy neckline and sleeve trim offering companionship and home support to an individual — dignified and non-clinical."
+                    },
+                    {
+                        "division": "care_staffing",
+                        "image": null,
+                        "image_alt": "Care professionals in white tunics with navy trim in a care-home or provider setting, representing staff supplied to organisations."
+                    },
+                    {
+                        "division": "security_services",
+                        "image": null,
+                        "image_alt": "A professional security officer in a calm, trustworthy posture in a commercial setting — no weapons or militarised presentation."
+                    },
+                    {
+                        "division": "cleaning_services",
+                        "image": null,
+                        "image_alt": "A commercial cleaning professional with modern equipment in a credible workplace environment."
+                    }
+                ]
             }
         },
         {
