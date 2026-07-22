@@ -25,13 +25,20 @@ import type { SiteNav } from '@vigil/web-framework';
 
 export const siteNav: SiteNav = {
   brandName: 'Vigil Services Ltd',
+  // MAIN-HOMEPAGE-VISUAL-02 — the reference header nav: Divisions + Contact (on-page anchors),
+  // plus a direct "Get in touch" mailto CTA (below). NO About (there is no standalone About page).
+  // The four division destinations are NOT nav items here — they are the image-led gateway cards
+  // (division_image_gateway), which "Divisions" scrolls to. This keeps the outbound cross-division
+  // links (the one site where they are allowed) in the gateway, exactly as the reference presents.
   primary: [
-    { label: 'Home', href: '/' },
-    { label: 'Cleaning', href: 'https://cleaning.vigilservices.co.uk/' },
-    { label: 'Security', href: 'https://security.vigilservices.co.uk/' },
-    { label: 'Care', href: 'https://care.vigilservices.co.uk/' },
-    { label: 'Staffing', href: 'https://staffing.vigilservices.co.uk/' },
+    { label: 'Divisions', href: '/#divisions' },
+    { label: 'Contact', href: '/#contact' },
   ],
+  // Corporate front door has no sales funnel (empty enquiry_url, C-12/MAIN-G3); the header CTA is a
+  // direct email. Email-only is the approved corporate contact until M-14 (corporate phone) is decided.
+  cta: { label: 'Get in touch', href: 'mailto:info@vigilservices.co.uk' },
+  logo: { src: '/logo.svg', alt: 'Vigil Services Ltd', footerSrc: '/logo-white.svg' },
+  copyright: true,
   footer: [
     {
       heading: 'Our businesses',

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 196 40" width="196" height="40" role="img" aria-label="Vigil Services Ltd">
+  <path d="M18 4 L33 9 L33 20 C33 30 26.5 35.5 18 38.5 C9.5 35.5 3 30 3 20 L3 9 Z" fill="none" stroke="#159b8d" stroke-width="2.4"/>
+  <path d="M10.5 13 L18 27 L25.5 13" fill="none" stroke="#159b8d" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="45" y="22.5" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="21" letter-spacing="3" fill="#ffffff">VIGIL</text>
+  <text x="46" y="33.5" font-family="Arial, Helvetica, sans-serif" font-weight="500" font-size="8" letter-spacing="4.5" fill="#cbd6e2">SERVICES LTD</text>
+</svg>
