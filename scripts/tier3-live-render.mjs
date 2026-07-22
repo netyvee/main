@@ -40,43 +40,45 @@ function die(kind, msg) {            // kind: 'INVALID' (1) | 'UNVERIFIED' (2)
   process.exit(kind === 'UNVERIFIED' ? 2 : 1);
 }
 
-async function tryFetch(u, headers) {
-  // redirect:'manual' — a 3xx means the bypass was NOT honored (Vercel redirects to SSO). We report
-  // that cleanly as UNVERIFIED rather than following the SSO chain into an opaque transport error.
-  let res;
-  try {
-    res = await fetch(u, { redirect: 'manual', headers: { 'user-agent': 'vigil-tier3-live-render', ...headers } });
-  } catch (e) {
-    return { err: `transport error: ${e.cause?.code || e.cause?.message || e.message}` };
-  }
-  if (res.status >= 300 && res.status < 400) {
-    return { redirect: `${res.status} -> ${res.headers.get('location') || '(no location)'}` };
-  }
-  if (res.status !== 200) return { status: `HTTP ${res.status}` };
-  return { html: await res.text() };
-}
-
 async function getHtml() {
   if (htmlFile) return readFileSync(htmlFile, 'utf8');
   if (!url) die('UNVERIFIED', 'no --url and no --html-file given');
   const secret = (process.env.VERCEL_AUTOMATION_BYPASS_SECRET || '').trim();
   if (!secret) die('UNVERIFIED', 'VERCEL_AUTOMATION_BYPASS_SECRET not set — cannot traverse deployment protection');
 
-  const qsUrl = url + (url.includes('?') ? '&' : '?') +
+  // Vercel automation bypass sets a bypass cookie and 307-redirects to "/". undici has no cookie jar,
+  // so we follow redirects MANUALLY, carrying Set-Cookie forward and keeping the bypass header on every
+  // hop. A redirect to vercel.com/sso means the secret was NOT accepted → UNVERIFIED.
+  let current = url + (url.includes('?') ? '&' : '?') +
     `x-vercel-protection-bypass=${encodeURIComponent(secret)}&x-vercel-set-bypass-cookie=true`;
-  const attempts = [
-    { label: 'header', u: url, headers: { 'x-vercel-protection-bypass': secret, 'x-vercel-set-bypass-cookie': 'true' } },
-    { label: 'query', u: qsUrl, headers: {} },
-    { label: 'header+query', u: qsUrl, headers: { 'x-vercel-protection-bypass': secret } },
-  ];
-  const failures = [];
-  for (const a of attempts) {
-    const r = await tryFetch(a.u, a.headers);
-    if (r.html !== undefined) return r.html;
-    failures.push(`${a.label}: ${r.redirect ? 'redirect ' + r.redirect : r.err || r.status}`);
+  let cookies = '';
+  const trail = [];
+  for (let hop = 0; hop < 6; hop++) {
+    const headers = { 'user-agent': 'vigil-tier3-live-render', 'x-vercel-protection-bypass': secret };
+    if (cookies) headers.cookie = cookies;
+    let res;
+    try { res = await fetch(current, { redirect: 'manual', headers }); }
+    catch (e) { die('UNVERIFIED', `transport error on ${current}: ${e.cause?.code || e.cause?.message || e.message}. Trail: ${trail.join(' -> ')}`); }
+    const setC = (typeof res.headers.getSetCookie === 'function') ? res.headers.getSetCookie() : [];
+    if (setC.length) {
+      const jar = setC.map((c) => c.split(';')[0]).join('; ');
+      cookies = cookies ? `${cookies}; ${jar}` : jar;
+    }
+    trail.push(String(res.status));
+    if (res.status >= 300 && res.status < 400) {
+      const loc = res.headers.get('location');
+      if (!loc) die('UNVERIFIED', `3xx with no Location. Trail: ${trail.join(' -> ')}`);
+      const next = new URL(loc, current);
+      if (/(^|\.)vercel\.com$/i.test(next.hostname) || /\/sso|\/login/i.test(next.pathname)) {
+        die('UNVERIFIED', `redirected to Vercel SSO (${next.href}) — the bypass secret was not accepted. Trail: ${trail.join(' -> ')}`);
+      }
+      current = next.href;
+      continue;
+    }
+    if (res.status !== 200) die('UNVERIFIED', `expected 200, got ${res.status}. Trail: ${trail.join(' -> ')}`);
+    return await res.text();
   }
-  die('UNVERIFIED', `deployment protection was not bypassed on any method — the bypass secret is ` +
-    `missing/invalid/expired, or protection is not the automation-bypass type. Attempts: ${failures.join(' | ')}`);
+  die('UNVERIFIED', `too many redirects. Trail: ${trail.join(' -> ')}`);
 }
 
 const html = await getHtml();
