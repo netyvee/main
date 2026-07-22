@@ -41,42 +41,17 @@
     "sections": [
         {
             "id": "home-hero",
-            "type": "corporate_hero",
+            "type": "continuous_division_hero",
             "fields": {
-                "heading": "Vigil Services Ltd",
-                "sub": "Four specialist divisions providing care, healthcare staffing, security and commercial cleaning. Choose the service you need."
-            }
-        },
-        {
-            "id": "home-divisions",
-            "type": "division_image_gateway",
-            "fields": {
-                "_note": "Four governed image-led columns. Order + approved hosts are enforced by the framework. Each image sits directly above its own title + Explore-more link (founder amendment). Images are provisional crops derived from the founder reference; replace the url per division with a licensed production asset before cutover.",
+                "_note": "One continuous hero (live-site pattern): a single team photograph, headline in a top-left scrim, and the four division names/links in a bottom scrim on the SAME photo — no separate white card section. Team image is a provisional crop from the founder reference; replace with a licensed production photograph before cutover.",
+                "hero_image": { "url": "/images/hero-team.jpg", "alt": "Vigil care, security and cleaning staff standing together in a commercial setting." },
+                "heading": "Essential people.\nExceptional service.",
+                "sub": "Delivering care, security, staffing and cleaning services you can trust, every day.",
                 "items": [
-                    {
-                        "title": "Care Services",
-                        "image": { "url": "/images/divisions/care-services.jpg", "alt": "A Vigil care worker in a white tunic with navy neckline trim, offering warm, dignified non-clinical support." },
-                        "href": "https://care.vigilservices.co.uk/",
-                        "cta_label": "Explore more"
-                    },
-                    {
-                        "title": "Care Staffing",
-                        "image": { "url": "/images/divisions/care-staffing.jpg", "alt": "A Vigil care professional in a white tunic with navy trim in a provider setting, representing care staff supplied to organisations." },
-                        "href": "https://staffing.vigilservices.co.uk/",
-                        "cta_label": "Explore more"
-                    },
-                    {
-                        "title": "Security Services",
-                        "image": { "url": "/images/divisions/security-services.jpg", "alt": "A professional Vigil security officer in a calm, trustworthy posture in a commercial setting." },
-                        "href": "https://security.vigilservices.co.uk/",
-                        "cta_label": "Explore more"
-                    },
-                    {
-                        "title": "Cleaning Services",
-                        "image": { "url": "/images/divisions/cleaning-services.jpg", "alt": "A Vigil commercial cleaning professional in a modern workplace environment." },
-                        "href": "https://cleaning.vigilservices.co.uk/",
-                        "cta_label": "Explore more"
-                    }
+                    { "title": "Care Services", "href": "https://care.vigilservices.co.uk/", "cta_label": "Explore more" },
+                    { "title": "Care Staffing", "href": "https://staffing.vigilservices.co.uk/", "cta_label": "Explore more" },
+                    { "title": "Security Services", "href": "https://security.vigilservices.co.uk/", "cta_label": "Explore more" },
+                    { "title": "Cleaning Services", "href": "https://cleaning.vigilservices.co.uk/", "cta_label": "Explore more" }
                 ]
             }
         },
@@ -85,7 +60,8 @@
             "type": "reassurance_strip",
             "fields": {
                 "statement": "At Vigil Services Ltd, we combine skilled people with high standards to deliver peace of mind.",
-                "action_label": "Get in touch"
+                "action_label": "Let's talk",
+                "link_label": "Email us"
             }
         }
     ]

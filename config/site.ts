@@ -55,9 +55,13 @@ export const siteNav: SiteNav = {
   // statutorily required at < £36m turnover; terms/accessibility are recommended, not blockers). The
   // footer links to main's own pages, NOT the staffing subdomain's. Modern-slavery/equal-opportunities
   // remain division-owned. Terms/accessibility can be added later without blocking cutover.
+  // Footer legal (reference set): Privacy Policy + Cookie Policy pages, plus a Cookie Settings control
+  // that re-opens the consent banner (href="#cookie-settings" — the framework CookieConsent listens for it,
+  // v0.6.8). No Terms link (no approved Terms page exists). No About.
   legalLinks: [
-    { label: 'Privacy', href: '/privacy' },
-    { label: 'Cookies', href: '/cookies' },
+    { label: 'Privacy Policy', href: '/privacy' },
+    { label: 'Cookie Policy', href: '/cookies' },
+    { label: 'Cookie Settings', href: '#cookie-settings' },
   ],
   companyReg: 'Company Reg. 11756806',
   // No enquiry CTA label: `main.enquiry_url` is deliberately empty after closing
