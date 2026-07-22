@@ -22,8 +22,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           the division sites keep the dark palette. */}
       <body className="vf-typography" style={{ background: '#ffffff', color: '#0a1628' }}>
         {children}
-        {/* MAIN-COOKIE-CONSENT-01 / MAIN-ANALYTICS-01 (D-103): GA4 G-KTH8TMCHTT loads ONLY after Accept. */}
-        <CookieConsent measurementId="G-KTH8TMCHTT" cookiePolicyHref="/cookies" />
+        {/* MAIN-COOKIE-CONSENT-01 / MAIN-ANALYTICS-01 (D-103): GA4 G-KTH8TMCHTT loads ONLY after Accept.
+            floatingSettings=false: the settings control lives in the footer ("Cookie Settings" →
+            #cookie-settings), not as a floating button, to match the reference footer. */}
+        <CookieConsent measurementId="G-KTH8TMCHTT" cookiePolicyHref="/cookies" floatingSettings={false} />
       </body>
     </html>
   );
