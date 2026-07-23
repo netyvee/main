@@ -1,17 +1,21 @@
 /* Corporate main site adopts the framework design tokens (single palette source). */
 @import '@vigil/web-framework/src/tokens/tokens.css';
 
-/* No Tailwind directives here, unlike care/staffing. The framework's sections and
-   Shell render with inline style={} driven by the page JSON `brand` block, so this
-   site needs no utility layer — and omitting it keeps tailwind, postcss and
-   autoprefixer out of the dependency tree entirely. Add them only if a future
-   corporate page genuinely needs utility classes. */
+/* Tailwind utility layer — REQUIRED, same as care/staffing. The framework's governed
+   sections and the Shell lay out with Tailwind utility classes (flex/grid/absolute/
+   object-cover/responsive), not inline styles alone; without this layer those classes
+   were inert on main and the layout did not render as designed. tailwind.config.ts
+   scans the framework source so the classes are generated, not purged. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Per-site font wiring: the type SCALE is the framework's; the FAMILIES are the
    shared Vigil pairing (DM Sans + Playfair via next/font, set on <html> in
    layout.tsx) — DESIGN-SYSTEM.md, the same pairing as every other Vigil site. */
 :root {
-  color-scheme: dark;
+  /* main is a LIGHT site (white ground); native controls follow suit. */
+  color-scheme: light;
   --vf-font-display: var(--font-playfair), ui-serif, Georgia, serif;
   --vf-font-body: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
 }
