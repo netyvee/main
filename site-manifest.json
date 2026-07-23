@@ -10,7 +10,7 @@
     {
       "route": "/cookies",
       "canonical_url": "https://vigilservices.co.uk/cookies",
-      "indexability_expectation": "noindex",
+      "indexability_expectation": "indexable",
       "publication_status": "unknown",
       "content_source": "content/pages/cookies.json",
       "outbound_links": []
@@ -18,7 +18,7 @@
     {
       "route": "/",
       "canonical_url": "https://vigilservices.co.uk/",
-      "indexability_expectation": "noindex",
+      "indexability_expectation": "indexable",
       "publication_status": "unknown",
       "content_source": "content/pages/index.json",
       "outbound_links": [
@@ -91,7 +91,7 @@
     {
       "route": "/privacy",
       "canonical_url": "https://vigilservices.co.uk/privacy",
-      "indexability_expectation": "noindex",
+      "indexability_expectation": "indexable",
       "publication_status": "unknown",
       "content_source": "content/pages/privacy.json",
       "outbound_links": []
@@ -197,7 +197,7 @@
     }
   ],
   "unresolved_dynamic_links": [],
-  "commit_sha": "187733391beeaea0ddb318b0320308989e45b444",
-  "generated_at": "2026-07-23T08:07:51.782Z",
-  "content_hash": "bf40abd941eb5bd62d30a6b2b89aa483abdbab8268c1c90d653199fad2e3c3f3"
+  "commit_sha": "98d2f505ec6ffbd83bb2731b01591350cc1cc300",
+  "generated_at": "2026-07-23T09:01:58.419Z",
+  "content_hash": "e56184e842b760bb65fadd36450ccec09ff3e2a3b5b23b621362de2e6e7615d4"
 }

@@ -5,7 +5,7 @@
     "page_type": "supporting",
     "seo": {
         "title": "Vigil Services Ltd — care, staffing, security and cleaning",
-        "noindex": true,
+        "noindex": false,
         "canonical": "/",
         "description": "Vigil Services Ltd is the parent group behind four specialist divisions — care and support, healthcare staffing, security and commercial cleaning. Choose the service you need.",
         "schema_type": null,
@@ -44,15 +44,37 @@
             "type": "continuous_division_hero",
             "fields": {
                 "_note": "One continuous hero. Balanced four-division representation (founder review): art-directed composites — desktop is four equal 25% panels (Care, Staffing, Security, Cleaning, left→right, aligned to the gateway below); mobile is a 2×2. A full-width top scrim carries the headline without singling out any division. Provisional composites built from the founder reference; replace with a licensed production photograph before cutover.",
-                "hero_image": { "url": "/images/hero-divisions-desktop.jpg", "alt": "Vigil care, care-staffing, security and cleaning professionals — one from each division." },
-                "hero_image_mobile": { "url": "/images/hero-divisions-mobile.jpg", "alt": "Vigil care, care-staffing, security and cleaning professionals — one from each division." },
+                "hero_image": {
+                    "url": "/images/hero-divisions-desktop.jpg",
+                    "alt": "Vigil care, care-staffing, security and cleaning professionals — one from each division."
+                },
+                "hero_image_mobile": {
+                    "url": "/images/hero-divisions-mobile.jpg",
+                    "alt": "Vigil care, care-staffing, security and cleaning professionals — one from each division."
+                },
                 "heading": "Essential people.\nExceptional service.",
                 "sub": "Delivering care, security, staffing and cleaning services you can trust, every day.",
                 "items": [
-                    { "title": "Care Services", "href": "https://care.vigilservices.co.uk/", "cta_label": "Explore more" },
-                    { "title": "Care Staffing", "href": "https://staffing.vigilservices.co.uk/", "cta_label": "Explore more" },
-                    { "title": "Security Services", "href": "https://security.vigilservices.co.uk/", "cta_label": "Explore more" },
-                    { "title": "Cleaning Services", "href": "https://cleaning.vigilservices.co.uk/", "cta_label": "Explore more" }
+                    {
+                        "title": "Care Services",
+                        "href": "https://care.vigilservices.co.uk/",
+                        "cta_label": "Explore more"
+                    },
+                    {
+                        "title": "Care Staffing",
+                        "href": "https://staffing.vigilservices.co.uk/",
+                        "cta_label": "Explore more"
+                    },
+                    {
+                        "title": "Security Services",
+                        "href": "https://security.vigilservices.co.uk/",
+                        "cta_label": "Explore more"
+                    },
+                    {
+                        "title": "Cleaning Services",
+                        "href": "https://cleaning.vigilservices.co.uk/",
+                        "cta_label": "Explore more"
+                    }
                 ]
             }
         },
