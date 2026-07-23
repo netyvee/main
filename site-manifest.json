@@ -3,7 +3,7 @@
   "site": "main",
   "domain": "https://vigilservices.co.uk",
   "repository": "netyvee/main",
-  "framework_pin": "github:netyvee/web-framework#v0.6.10",
+  "framework_pin": "github:netyvee/web-framework#v0.6.11",
   "declaration_only": true,
   "verification_note": "This manifest declares intent from a commit. It is NOT network verification (SG-02 Tier 2) and NOT rendered verification (SG-02 Tier 3). A consumer must re-validate every claimed classification against the CRM SiteRegistry.",
   "routes": [
@@ -197,7 +197,7 @@
     }
   ],
   "unresolved_dynamic_links": [],
-  "commit_sha": "45f5d579ee2f2d27a4c83f5bf534cdc83bf33cee",
-  "generated_at": "2026-07-23T06:16:27.573Z",
-  "content_hash": "2ab9d0b3a4d3b1beda5072756d6e8f35f32175dd789238320d8d813f3a81b5c6"
+  "commit_sha": "fb77dff68a838c092896e36f3c23e497563e4244",
+  "generated_at": "2026-07-23T06:26:29.939Z",
+  "content_hash": "01609118c81f5ed19ab45aaa1c56c684ac76c8cf6fcb49728425b8c8931ed260"
 }
