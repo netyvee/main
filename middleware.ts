@@ -16,8 +16,21 @@ const GONE = new Set([
 ]);
 const REDIRECT_HOME = new Set(['/about', '/about-vigil-services-ltd']);
 
+// The canonical host is the apex. www -> apex is a PERMANENT (308), single-hop, path- AND
+// query-preserving redirect (MAIN-CUTOVER-EXECUTE-01 follow-up, founder Option 2). Handled here — the
+// repository's one governed redirect layer — rather than a Vercel-edge redirect, so the status code
+// (308) and behaviour are code-owned + drift-proof. It becomes authoritative once the Vercel `www`
+// domain is set to SERVE this deployment (No Redirect) so www requests reach the app.
+const APEX = 'https://vigilservices.co.uk';
+
 export function middleware(request: NextRequest) {
   const url = request.nextUrl;
+
+  const host = request.headers.get('host');
+  if (host === 'www.vigilservices.co.uk') {
+    return NextResponse.redirect(new URL(url.pathname + url.search, APEX), 308);
+  }
+
   const raw = url.pathname;
   const path = raw !== '/' ? raw.replace(/\/+$/, '') : '/'; // canonical form, no trailing slash
 
