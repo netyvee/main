@@ -1,0 +1,9 @@
+{
+  "contract_version": 1,
+  "site": "main",
+  "repo": "netyvee/main",
+  "generated_by": "PUB-01C — commit this file to the repo root as crm-contract.json",
+  "publication_types": {
+    "render_json_page": { "schema_version": 1, "target_path": "content/pages/", "required_fields": ["slug", "page_type"] }
+  }
+}
